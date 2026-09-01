@@ -1,0 +1,206 @@
+---
+import { tours } from '~/data/tours';
+
+const toursJson = JSON.stringify(tours.map((t) => ({ id: t.id, label: t.label, stops: t.stops.map((s) => s.path) })));
+---
+
+<div class="tour-progress" data-role="tour-progress" data-tours={toursJson} hidden>
+  <div class="tour-progress-confetti" data-role="confetti" aria-hidden="true"></div>
+  <a class="tour-progress-pill" data-role="pill" href="/">
+    <span class="tour-progress-text" data-role="text"></span>
+  </a>
+</div>
+
+<style>
+  .tour-progress {
+    position: fixed;
+    inset-inline-end: 1.25rem;
+    inset-block-end: 1.25rem;
+    z-index: var(--sl-z-index-toc, 5);
+  }
+
+  .tour-progress-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    /* Always literal white, not the theme-flipping --sl-color-white token — this pill's
+       background (accent/green) is a fixed mid-tone in both themes, so the text needs to
+       stay white in both, not flip to near-black in light mode. */
+    color: #ffffff;
+    background: var(--sl-color-accent);
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    font-size: var(--sl-text-sm);
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    transition: transform 0.15s ease;
+  }
+
+  .tour-progress-pill:hover {
+    transform: translateY(-2px);
+  }
+
+  .tour-progress.is-complete .tour-progress-pill {
+    background: var(--sl-color-green);
+  }
+
+  .tour-progress-confetti {
+    position: absolute;
+    inset: -3rem -3rem auto auto;
+    width: 6rem;
+    height: 6rem;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .tour-progress-confetti span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.4rem;
+    height: 0.9rem;
+    border-radius: 1px;
+    opacity: 0;
+  }
+
+  .tour-progress.is-celebrating .tour-progress-confetti span {
+    animation: tour-confetti-burst 900ms ease-out forwards;
+  }
+
+  @keyframes tour-confetti-burst {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) rotate(var(--confetti-rot, 0deg)) translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) rotate(var(--confetti-rot, 0deg)) translateY(-3.5rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tour-progress.is-celebrating .tour-progress-confetti span {
+      animation: none;
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  const ACTIVE_TOUR_KEY = 'ccg-active-tour';
+  const VISITED_KEY = 'ccg-visited-pages';
+  const CELEBRATED_PREFIX = 'ccg-tour-celebrated:';
+  const CONFETTI_COLORS = ['#d97757', '#3fb950', '#58a6ff', '#ffd9c7'];
+
+  interface TourMeta {
+    id: string;
+    label: string;
+    stops: string[];
+  }
+
+  function normalizePath(path: string): string {
+    return path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
+  }
+
+  function readVisited(): Set<string> {
+    try {
+      const raw = localStorage.getItem(VISITED_KEY);
+      return new Set(raw ? JSON.parse(raw) : []);
+    } catch {
+      return new Set();
+    }
+  }
+
+  function recordVisit(path: string) {
+    const visited = readVisited();
+    visited.add(normalizePath(path));
+    try {
+      localStorage.setItem(VISITED_KEY, JSON.stringify([...visited]));
+    } catch {
+      // localStorage unavailable — progress just won't persist this session
+    }
+  }
+
+  function buildConfetti(container: HTMLElement) {
+    if (container.childElementCount > 0) return;
+    for (let i = 0; i < 14; i++) {
+      const piece = document.createElement('span');
+      piece.style.setProperty('--confetti-rot', `${(360 / 14) * i}deg`);
+      piece.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+      container.appendChild(piece);
+    }
+  }
+
+  function initTourProgress() {
+    recordVisit(location.pathname);
+
+    const el = document.querySelector<HTMLElement>('[data-role="tour-progress"]');
+    if (!el) return;
+
+    let activeId: string | null = null;
+    try {
+      activeId = localStorage.getItem(ACTIVE_TOUR_KEY);
+    } catch {
+      activeId = null;
+    }
+
+    if (!activeId) {
+      el.hidden = true;
+      return;
+    }
+
+    let allTours: TourMeta[] = [];
+    try {
+      allTours = JSON.parse(el.dataset.tours || '[]');
+    } catch {
+      allTours = [];
+    }
+    const tour = allTours.find((t) => t.id === activeId);
+    if (!tour) {
+      el.hidden = true;
+      return;
+    }
+
+    const visited = readVisited();
+    const done = tour.stops.filter((p) => visited.has(normalizePath(p))).length;
+    const total = tour.stops.length;
+    const textEl = el.querySelector<HTMLElement>('[data-role="text"]');
+    const pillEl = el.querySelector<HTMLAnchorElement>('[data-role="pill"]');
+    const confettiEl = el.querySelector<HTMLElement>('[data-role="confetti"]');
+
+    el.hidden = false;
+
+    if (done >= total) {
+      el.classList.add('is-complete');
+      if (textEl) textEl.textContent = `🎉 ${tour.label} tour complete!`;
+      if (pillEl) pillEl.href = '/';
+
+      const celebratedKey = CELEBRATED_PREFIX + tour.id;
+      let alreadyCelebrated = false;
+      try {
+        alreadyCelebrated = localStorage.getItem(celebratedKey) === '1';
+      } catch {
+        alreadyCelebrated = false;
+      }
+      if (!alreadyCelebrated && confettiEl) {
+        buildConfetti(confettiEl);
+        el.classList.add('is-celebrating');
+        try {
+          localStorage.setItem(celebratedKey, '1');
+        } catch {
+          // ignore
+        }
+        setTimeout(() => el.classList.remove('is-celebrating'), 1200);
+      }
+    } else {
+      el.classList.remove('is-complete');
+      if (textEl) textEl.textContent = `${done} of ${total} stops · ${tour.label}`;
+      const nextStop = tour.stops.find((p) => !visited.has(normalizePath(p)));
+      if (pillEl && nextStop) pillEl.href = nextStop;
+    }
+  }
+
+  initTourProgress();
+  document.addEventListener('astro:page-load', initTourProgress);
+</script>

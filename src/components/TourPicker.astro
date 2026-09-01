@@ -1,0 +1,326 @@
+---
+import { tours, totalMinutes } from '~/data/tours';
+import Compass from '~/components/icons/Compass.astro';
+import TerminalCheck from '~/components/icons/TerminalCheck.astro';
+import Shield from '~/components/icons/Shield.astro';
+
+const icons = { compass: Compass, 'terminal-check': TerminalCheck, shield: Shield };
+---
+
+<div class="tour-picker" data-reveal>
+  <div class="tour-tiles" data-role="tiles">
+    <p class="tour-picker-kicker">Pick your 30-minute tour</p>
+    <div class="tour-tile-grid">
+      {
+        tours.map((tour) => {
+          const Icon = icons[tour.iconName];
+          return (
+            <button type="button" class="tour-tile" data-tour-id={tour.id}>
+              <span class="tour-tile-icon">
+                <Icon />
+              </span>
+              <span class="tour-tile-label">{tour.label}</span>
+              <span class="tour-tile-blurb">{tour.blurb}</span>
+              <span class="tour-tile-meta">{totalMinutes(tour)} min · {tour.stops.length} stops</span>
+            </button>
+          );
+        })
+      }
+    </div>
+  </div>
+
+  {
+    tours.map((tour) => (
+      <div class="tour-panel" data-role="panel" data-tour-panel={tour.id} hidden>
+        <div class="tour-panel-head">
+          <p class="tour-panel-title">Your {totalMinutes(tour)}-minute tour: {tour.label}</p>
+          <button type="button" class="tour-switch" data-role="switch">
+            Switch path
+          </button>
+        </div>
+        <ol class="tour-stop-list">
+          {tour.stops.map((stop, i) => (
+            <li>
+              <a class="tour-stop" href={stop.path} data-tour-stop={stop.path}>
+                <span class="tour-stop-index">{i + 1}</span>
+                <span class="tour-stop-title">{stop.title}</span>
+                <span class="tour-stop-minutes">{stop.minutes} min</span>
+                <span class="tour-stop-check" data-role="check" aria-hidden="true">✓</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .tour-picker {
+    margin: 2rem 0;
+  }
+
+  .tour-picker-kicker {
+    font-weight: 600;
+    font-size: var(--sl-text-h4);
+    margin: 0 0 1rem 0;
+  }
+
+  .tour-tile-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 50rem) {
+    .tour-tile-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .tour-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+
+  .tour-tile:hover,
+  .tour-tile:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+    border-color: var(--sl-color-accent);
+    outline: none;
+  }
+
+  .tour-tile-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--sl-color-accent);
+  }
+
+  .tour-tile-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tour-tile-label {
+    font-weight: 600;
+    font-size: var(--sl-text-lg);
+  }
+
+  .tour-tile-blurb {
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-2);
+  }
+
+  .tour-tile-meta {
+    font-size: var(--sl-text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--sl-color-accent);
+    margin-top: 0.25rem;
+  }
+
+  .tour-panel {
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--sl-color-bg-nav);
+  }
+
+  .tour-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+
+  .tour-panel-title {
+    font-weight: 600;
+    font-size: var(--sl-text-lg);
+    margin: 0;
+  }
+
+  .tour-switch {
+    font: inherit;
+    font-size: var(--sl-text-xs);
+    background: none;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    color: var(--sl-color-gray-2);
+    cursor: pointer;
+  }
+
+  .tour-switch:hover {
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-accent);
+  }
+
+  .tour-stop-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tour-stop {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid transparent;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .tour-stop:hover {
+    background: var(--sl-color-black);
+    border-color: var(--sl-color-hairline);
+  }
+
+  .tour-stop-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--sl-color-accent-low);
+    color: var(--sl-color-accent);
+    font-size: var(--sl-text-xs);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .tour-stop-title {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  .tour-stop-minutes {
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-2);
+    white-space: nowrap;
+  }
+
+  .tour-stop-check {
+    display: none;
+    color: var(--sl-color-green);
+    font-weight: 700;
+  }
+
+  .tour-stop.is-visited .tour-stop-check {
+    display: inline;
+  }
+
+  .tour-stop.is-visited .tour-stop-index {
+    background: var(--sl-color-green);
+    color: var(--sl-color-black);
+  }
+</style>
+
+<script>
+  const ACTIVE_TOUR_KEY = 'ccg-active-tour';
+  const VISITED_KEY = 'ccg-visited-pages';
+
+  function normalizePath(path: string): string {
+    return path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
+  }
+
+  function readVisited(): string[] {
+    try {
+      const raw = localStorage.getItem(VISITED_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function markStopVisitedState(root: ParentNode) {
+    const visited = new Set(readVisited());
+    root.querySelectorAll<HTMLAnchorElement>('.tour-stop').forEach((stop) => {
+      const path = stop.dataset.tourStop;
+      if (path && visited.has(normalizePath(path))) {
+        stop.classList.add('is-visited');
+      } else {
+        stop.classList.remove('is-visited');
+      }
+    });
+  }
+
+  function showPanel(root: ParentNode, tourId: string) {
+    root.querySelectorAll<HTMLElement>('[data-role="tiles"]').forEach((el) => {
+      el.hidden = true;
+    });
+    root.querySelectorAll<HTMLElement>('[data-role="panel"]').forEach((el) => {
+      el.hidden = el.dataset.tourPanel !== tourId;
+    });
+    markStopVisitedState(root);
+  }
+
+  function showTiles(root: ParentNode) {
+    root.querySelectorAll<HTMLElement>('[data-role="tiles"]').forEach((el) => {
+      el.hidden = false;
+    });
+    root.querySelectorAll<HTMLElement>('[data-role="panel"]').forEach((el) => {
+      el.hidden = true;
+    });
+  }
+
+  function initTourPicker() {
+    document.querySelectorAll<HTMLElement>('.tour-picker').forEach((picker) => {
+      picker.querySelectorAll<HTMLButtonElement>('.tour-tile').forEach((tile) => {
+        tile.addEventListener('click', () => {
+          const id = tile.dataset.tourId!;
+          try {
+            localStorage.setItem(ACTIVE_TOUR_KEY, id);
+          } catch {
+            // localStorage unavailable — picking still works for this page view
+          }
+          showPanel(picker, id);
+        });
+      });
+
+      picker.querySelectorAll<HTMLButtonElement>('[data-role="switch"]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          try {
+            localStorage.removeItem(ACTIVE_TOUR_KEY);
+          } catch {
+            // ignore
+          }
+          showTiles(picker);
+        });
+      });
+
+      let active: string | null = null;
+      try {
+        active = localStorage.getItem(ACTIVE_TOUR_KEY);
+      } catch {
+        active = null;
+      }
+      if (active && picker.querySelector(`[data-tour-panel="${active}"]`)) {
+        showPanel(picker, active);
+      }
+    });
+  }
+
+  initTourPicker();
+  document.addEventListener('astro:page-load', initTourPicker);
+</script>
