@@ -1,0 +1,61 @@
+---
+title: Configuration
+description: How Claude Code's three config tiers — global, project, and local — work together, and the settings keys worth knowing.
+---
+
+import QuickRefTable from '~/components/QuickRefTable.astro';
+import CompareCard from '~/components/CompareCard.astro';
+import Recap from '~/components/Recap.astro';
+
+Claude Code reads settings from three places, and each one overrides the broader one below it. Getting this straight early saves you from "why is my teammate's Claude behaving differently than mine" confusion later.
+
+## The three tiers
+
+- **Global** — lives on your machine, applies to every project you open Claude Code in.
+- **Project** (`.claude/` folder) — lives in the repo, committed to version control, shared with the whole team working on that project.
+- **Local** (`settings.local.json`) — personal overrides on top of the project config, machine-only, never committed.
+
+<CompareCard
+  leftTitle="Project settings (.claude/settings.json)"
+  leftTone="neutral"
+  leftPoints={[
+    'Committed to the repo',
+    'Applies to everyone on the team',
+    'This is where shared conventions live',
+  ]}
+  rightTitle="Local settings (.claude/settings.local.json)"
+  rightTone="neutral"
+  rightPoints={[
+    'Gitignored by default, machine-only',
+    'Your personal overrides on top of project settings',
+    "Good for things like your own model preference or a permission you don't want to impose on teammates",
+  ]}
+/>
+
+The override order is: **local beats project, project beats global.** If your project sets `model: sonnet` but your local settings say `model: opus`, you get Opus — but your teammate without a local override still gets Sonnet.
+
+The easiest way to look at or change any of this without hand-editing JSON is `/config`, which opens an interactive settings menu right inside your session.
+
+## Settings keys worth knowing
+
+<QuickRefTable caption="Common settings.json keys">
+| Setting | Purpose |
+|---|---|
+| `{ "permissions": {...} }` | Manage tool permissions for all sessions |
+| `{ "model": "opus" }` | Default model for new sessions |
+| `{ "alwaysThinkingEnabled": true }` | Enable/disable extended thinking by default |
+| `{ "hooks": {} }` | Manage hooks (covered in detail on the [Hooks page](/extending-claude/hooks/)) |
+| `{ "env": { "IS_DEMO": 1 } }` | Env vars applied to every session |
+</QuickRefTable>
+
+:::tip[Thinking mode isn't free]
+Extended thinking helps on genuinely hard problems, but it's slower and burns more tokens on simple, obvious tasks. Toggle `alwaysThinkingEnabled` off for routine work and back on when you hit something that actually needs the extra reasoning.
+:::
+
+:::caution[Keep secrets out of context]
+Deny Claude Code read and write access to `.env` files and anything else that holds credentials, via your permission config. This isn't just about avoiding accidental edits — it keeps secrets out of the model's context entirely, so they can't leak into a response, a log, or a shared session transcript. See [Security and Client Data](/team-playbook/security-and-client-data/) for the fuller team policy.
+:::
+
+<Recap question="Your project's settings.json sets model to sonnet, but you personally prefer opus for your own work. Where should that preference live, and why?">
+In your **local** settings (`.claude/settings.local.json`), not the project settings. Local overrides project, so you get Opus without changing what the rest of the team gets — project settings stay the shared default, committed to the repo, and nobody else's session is affected by your personal preference.
+</Recap>

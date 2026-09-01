@@ -1,0 +1,48 @@
+---
+title: Shared Conventions and CLAUDE.md
+description: A reusable CLAUDE.md template across LinkDev's Flutter repos, and how AI-assisted code fits the existing review process.
+---
+
+import Recap from '~/components/Recap.astro';
+
+Every project's CLAUDE.md ends up saying roughly the same handful of things — what state management library, where tests live, what "done" means. Writing that from scratch on every new repo means reinventing it every time, and it means the conventions that do get written down live in whatever form that day's author happened to reach for. A shared template fixes both problems.
+
+## Why a shared template is worth having
+
+Two reasons, and they compound:
+
+- **Less friction moving between projects.** When someone rotates onto a different client codebase, a CLAUDE.md that looks structurally familiar — same sections, same conventions in the same order — means they're reading for the project-specific answers, not figuring out the format from scratch.
+- **Conventions stop living in one person's head.** Every team has a senior dev who "just knows" that this project uses feature-first folders, or that widget tests go next to the widget, or that this particular package caused problems last time. Writing that down once, in a shared format, means the next person doesn't have to ask — and doesn't have to get it wrong first.
+
+## A starting template
+
+Copy this into a new project's CLAUDE.md and fill in the brackets:
+
+```markdown
+# Project conventions
+
+- Flutter/Dart project. State management: [Riverpod/Bloc/Provider — fill in per project].
+- Folder structure: [feature-first/layer-first — fill in per project]. New features go under
+  `lib/features/<feature_name>/`.
+- Run `flutter analyze` and `flutter test` before considering a task done.
+- For any third-party package, check current usage via the DocsExplorer subagent
+  (see @.claude/agents/DocsExplorer.md) rather than relying on training data.
+- Keep replies concise. Don't restate the plan back unless asked.
+- Client-specific notes: [link to the client-specific spec/BRD doc, if any].
+```
+
+Nothing in there is exotic — that's deliberate. It's the minimum a new session needs to stop guessing, not an attempt to document the entire project. See [Claude Code for Flutter Teams](/team-playbook/claude-code-for-flutter-teams/) for the fuller reasoning behind each of these conventions, and [Sessions, Context, and Memory](/core-workflow/sessions-context-and-memory/) for how CLAUDE.md fits into a session generally.
+
+## Reviewing AI-assisted code: same bar, no separate lane
+
+AI-assisted code goes through the same PR review process as anything else at LinkDev. There's no fast-track for "Claude wrote this" and no separate, stricter lane either — the bar for merging is the quality of the diff, not who or what typed it. A reviewer approving a PR shouldn't need to know, and shouldn't need to care, whether a human or Claude produced the change in front of them; the standard is "would this pass review regardless of authorship."
+
+That's a deliberate choice, not an oversight. A separate "AI code" lane invites two bad habits: either waving things through because "the AI probably got it right," or over-scrutinizing correct code because of where it came from. Same review, same standard, every time.
+
+:::tip[Keep it short and trusted]
+A CLAUDE.md nobody trusts because it's gone stale is worse than not having one — at that point it actively misleads instead of just being silent. Keep the shared template short enough that updating it isn't a chore, and give it an informal owner (whoever last touched the project's conventions is a fine default) so it actually gets updated when something changes, instead of drifting for six months.
+:::
+
+<Recap question="Why keep client-specific notes as a link out from CLAUDE.md rather than pasting the whole client spec into it directly?">
+CLAUDE.md is loaded into context on every session, so anything pasted into it gets re-read every time regardless of whether that task needs it — a full client spec bloats context for no benefit on the days you're not touching that part of the project. Linking out keeps the shared template itself short, generic, and reusable across projects, while the actual spec stays in its own document where it can be long, detailed, and updated independently without touching the file every session depends on.
+</Recap>

@@ -1,0 +1,18 @@
+---
+import { Card } from '@astrojs/starlight/components';
+import type { StarlightIcon } from '@astrojs/starlight/components-internals/Icons';
+
+interface Props {
+  title: string;
+  href: string;
+  icon?: StarlightIcon;
+}
+
+const { title, href, icon } = Astro.props;
+---
+
+<a class="card-link" href={href}>
+  <Card title={title} icon={icon}>
+    <slot />
+  </Card>
+</a>

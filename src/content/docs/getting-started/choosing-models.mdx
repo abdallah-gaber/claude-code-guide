@@ -1,0 +1,16 @@
+---
+title: Choosing Models
+description: How to pick and switch the model Claude Code uses, mid-session or at launch.
+---
+
+Three ways to control which model you're talking to:
+
+- **`/model`** — pick the model for the current session, right from inside the chat.
+- **`claude --model opus`** — set the default model when you launch a new session.
+- **`Option+P`** (Mac) / **`Alt+P`** (other platforms) — a quick keyboard shortcut to switch mid-session without typing a command.
+
+:::tip[Check before you assume]
+It's easy to lose track of which model you're on across sessions — especially if you've got local overrides, a project default, and a habit of switching for hard problems. Glance at `/model` at the start of a session to confirm you're actually on the model you meant to be on.
+:::
+
+That's the mechanics. For the actual "which model for which task" judgment call — when Sonnet is enough, when a problem is worth reaching for Opus, where Haiku fits in — see [Model and Cost Guidance](/team-playbook/model-and-cost-guidance/).

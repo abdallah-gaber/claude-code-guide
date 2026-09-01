@@ -1,0 +1,49 @@
+---
+title: Connecting Claude Code to Messaging Apps via MCP
+description: A DIY pattern for getting Claude Code notifications and control into a messaging app like Telegram, built on a community MCP server.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import Recap from '~/components/Recap.astro';
+
+Some teams wire Claude Code up to Telegram (or Slack, or Discord) so it can ping them when a task finishes, or so they can nudge a session from their phone without opening a dedicated app.
+
+:::note[This is a DIY pattern, not a product name]
+This isn't an official Anthropic feature — it's a community MCP server that talks to a messaging platform's bot API, wired into Claude Desktop's config. Treat it the way you'd treat any other MCP integration: useful, but something you set up and maintain yourself, not something Anthropic ships or supports directly. It's a different thing entirely from any official first-party chat integration Anthropic may offer.
+:::
+
+Here's the shape of it, using Telegram as the example:
+
+<Steps>
+1. **Create a bot via Telegram's `@BotFather`.** Message `@BotFather` on Telegram, send `/newbot`, and follow the prompts. You'll end up with a bot token — treat it like a credential.
+2. **Let the bot actually see messages.** Add it to a group/channel, or DM it directly. For a group, send `/setprivacy` to `@BotFather` and disable privacy mode — otherwise the bot only sees messages explicitly directed at it, not general group chatter.
+3. **Add the MCP server to Claude Desktop's config.** Settings → Developer → Edit Config opens `claude_desktop_config.json`. Something like:
+
+   ```json
+   {
+     "mcpServers": {
+       "telegram-bot": {
+         "command": "npx",
+         "args": ["-y", "@modelcontextprotocol/server-telegram"],
+         "env": {
+           "TELEGRAM_BOT_TOKEN": "your-bot-token-here"
+         }
+       }
+     }
+   }
+   ```
+4. **Fully restart Claude Desktop.** The Telegram tools should now show up in the connector/tools list.
+</Steps>
+
+:::caution[Two things to double-check before you rely on this]
+- Package names, env var names, and exact config shape vary between community MCP servers. Whatever specific server you pick, verify the exact setup against **that server's own README/docs** — don't copy the snippet above (or any other) verbatim and assume it's still current.
+- A Telegram bot can only message users who have DM'd it first. It can't cold-message you — you have to initiate contact with it at least once.
+:::
+
+## Where this is actually useful
+
+The obvious use case: "ping me on Telegram when this long-running task finishes." Pair this with [Scheduled Routines](/beyond-the-terminal/scheduled-routines/) and you've got a setup where recurring or long-running work reports back to wherever you already are, instead of you having to remember to go check a terminal.
+
+<Recap question="Why is this page not called 'Claude Code Channels' even though the source course material used that name?">
+"Claude Code Channels" isn't an official Anthropic product name — it was the course's label for a DIY pattern built on top of a community MCP server. Calling it that here would misleadingly imply it's a first-party feature Anthropic ships and supports, when it's really something you assemble yourself (bot token, config file, community package) and is distinct from any official first-party chat integration Anthropic may offer.
+</Recap>

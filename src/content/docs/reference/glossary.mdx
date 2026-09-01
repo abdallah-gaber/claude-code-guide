@@ -1,0 +1,66 @@
+---
+title: Glossary
+description: Plain-English definitions for Claude Code's terminology, A to Z.
+---
+
+Claude Code (and Anthropic's docs) throw around a handful of terms that don't mean what you'd guess from the name alone. Here's the short version of each.
+
+### Agent Skill
+
+A folder of instructions (`SKILL.md` plus optional supporting files) that Claude loads lazily when it's relevant to the current task, instead of being stuffed into context up front. See [Skills & Custom Commands](/extending-claude/skills-and-commands/).
+
+### Auto Memory
+
+Claude's own self-maintained notes about a project — written and updated by Claude itself across sessions, stored separately from CLAUDE.md. It's additive to CLAUDE.md, not a replacement for it. See [Sessions, Context & Memory](/core-workflow/sessions-context-and-memory/).
+
+### CLAUDE.md
+
+A project's manually maintained long-term instructions file, read at the start of every prompt. This is where you put conventions, gotchas, and anything that must always be true — the stuff you don't want to repeat every session. See [Sessions, Context & Memory](/core-workflow/sessions-context-and-memory/).
+
+### Compaction
+
+Claude Code's automatic summarization of context when the context window fills up. It keeps the session going, but detail gets lost in the summary — which is usually the reason Claude "forgets" something you told it earlier. See [Sessions, Context & Memory](/core-workflow/sessions-context-and-memory/).
+
+### Context window
+
+The finite amount of text — files, conversation history, generated code — Claude can hold in view at once during a session. Everything Claude "knows" mid-session has to fit in here.
+
+### Custom command
+
+A reusable prompt template saved as a markdown file, invoked with `/command-name`. Good for prompts you type often enough that typing them out each time is a waste. See [Skills & Custom Commands](/extending-claude/skills-and-commands/).
+
+### Dispatch
+
+Starting a brand-new task in a cloud environment, independent of your local machine — no laptop required, no local session tying it up. See [Mobile & Remote Control](/beyond-the-terminal/mobile-and-remote-control/).
+
+### Hook
+
+A command that runs automatically in response to a Claude Code event — for example, auto-formatting a file after every edit, or blocking a risky command before it runs. See [Hooks](/extending-claude/hooks/).
+
+### MCP (Model Context Protocol)
+
+The standard protocol connecting Claude Code to external tools and systems — databases, browsers, ticket trackers, whatever. If Claude can talk to it and it isn't a built-in tool, it's probably an MCP server. See [MCP & Built-in Tools](/extending-claude/mcp-and-built-in-tools/).
+
+### Plan Mode
+
+A mode where Claude gathers context and proposes a plan — and asks clarifying questions — before touching any files. Good for anything you want to sanity-check before it becomes a diff. See [Plan Mode](/core-workflow/plan-mode/).
+
+### Plugin
+
+A packaged bundle of skills, commands, agents, and/or hooks that installs as one unit, typically shared across a team or the community. See [Plugins](/extending-claude/plugins/).
+
+### Ralph Loop
+
+A community-coined technique of repeatedly re-running Claude Code toward the same goal, letting it iterate its way to a working result. It's not an official product feature — just a pattern people found useful. See [The Ralph Loop](/automation-and-feedback-loops/the-ralph-loop/).
+
+### Remote Control
+
+Connecting an already-running local session to another device (like your phone) so you can steer or approve it remotely without being at your laptop. See [Mobile & Remote Control](/beyond-the-terminal/mobile-and-remote-control/).
+
+### Routine
+
+A scheduled, recurring task that runs Claude Code automatically on a cron-like schedule, without you kicking it off by hand. See [Scheduled Routines](/beyond-the-terminal/scheduled-routines/).
+
+### Subagent
+
+A specialized agent with its own instructions and restricted tool access, invoked by the main session for a specific kind of task (code review, test-writing, research). Keeps the main session's context clean by doing the messy work elsewhere. See [Subagents](/extending-claude/subagents/).

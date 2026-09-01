@@ -1,0 +1,94 @@
+---
+title: Cheat Sheet
+description: One condensed, printable page of Claude Code's commands, flags, and shortcuts — bookmark this one.
+---
+
+import QuickRefTable from '~/components/QuickRefTable.astro';
+import { CardGrid } from '@astrojs/starlight/components';
+import LinkCard from '~/components/LinkCard.astro';
+
+This page condenses the [Getting Started reference tables](/getting-started/commands-and-shortcuts/) — plus a few extras — into one page. It prints reasonably cleanly via your browser's normal Print (Cmd/Ctrl+P) if you want a paper copy.
+
+## Starting a session
+
+<QuickRefTable caption="Getting Claude running">
+| Command | Effect |
+|---|---|
+| `claude` / `claude "prompt"` | Start a new session |
+| `claude -p "prompt"` | One-shot query, no session |
+| `claude -c` | Resume last session |
+| `claude --agent <name>` | Start with a specific subagent active |
+| `claude --permission-mode plan` | Start in Plan Mode |
+| `claude --remote "prompt"` | Start a remote/cloud session |
+</QuickRefTable>
+
+## Slash commands
+
+<QuickRefTable caption="In-session commands">
+| Command | Effect |
+|---|---|
+| `/help` | List commands |
+| `/model` | Choose model |
+| `/clear` | Clear context, fresh session |
+| `/compact` | Compact context manually |
+| `/config` | Open settings |
+| `/context` | View context window usage |
+| `/usage` | View remaining plan usage |
+| `/init` | Scaffold a CLAUDE.md |
+| `/mcp` | Manage MCP servers |
+| `/permissions` | Manage tool permissions |
+| `/rewind` | Undo to earlier state |
+| `/memory` | Manage auto-memory |
+| `/remote-control` | Connect a local session to another device |
+</QuickRefTable>
+
+## CLI flags
+
+<QuickRefTable caption="Flags for `claude`">
+| Flag | Effect |
+|---|---|
+| `--allowedTools "Read" "Write"` | Restrict to listed tools |
+| `--disallowedTools "Write"` | Block specific tools |
+| `--dangerously-skip-permissions` | Skip all permission prompts — use with real caution |
+| `--model opus` | Set model for this launch |
+| `--permission-mode plan` | Start in Plan Mode |
+</QuickRefTable>
+
+## Keyboard shortcuts
+
+<QuickRefTable caption="Shortcuts inside a session">
+| Shortcut | Effect |
+|---|---|
+| Shift+Enter / Ctrl+J | New line without submitting |
+| Shift+Tab | Cycle modes |
+| Esc, Esc | Rewind to before the last action |
+| Option/Alt+P | Switch model |
+| Ctrl+O | Toggle verbose output |
+| Ctrl+B | Move task to background |
+| Ctrl/Cmd/Alt+V | Paste text or image |
+</QuickRefTable>
+
+## Commands & skills file locations
+
+<QuickRefTable caption="Where things live on disk">
+| Location | Scope |
+|---|---|
+| `.claude/commands/` | Project commands (shared) |
+| `~/.claude/commands/` | Personal commands |
+| `.claude/agents/` | Subagents |
+| `.claude/skills/` | Skills |
+</QuickRefTable>
+
+## See the full guide
+
+<CardGrid>
+  <LinkCard title="Commands & Shortcuts" icon="rocket" href="/getting-started/commands-and-shortcuts/">
+    The full, annotated version of the tables above.
+  </LinkCard>
+  <LinkCard title="Skills & Custom Commands" icon="puzzle" href="/extending-claude/skills-and-commands/">
+    How to write your own skills and slash commands.
+  </LinkCard>
+  <LinkCard title="Security & Client Data" icon="padlock" href="/team-playbook/security-and-client-data/">
+    What's safe to point Claude Code at, and what isn't.
+  </LinkCard>
+</CardGrid>

@@ -1,0 +1,34 @@
+---
+title: MCP and Built-in Tools
+description: How Claude Code reaches beyond your codebase — built-in web search, and connecting external systems via MCP servers like Context7.
+---
+
+import Recap from '~/components/Recap.astro';
+
+Claude Code isn't limited to your codebase. It has a couple of built-in ways to reach outward for information, and a standard protocol for wiring up anything more specific.
+
+## Built-in web search
+
+Claude Code can search the web on its own and pull what it finds directly into context — current docs, a Stack Overflow thread, an API reference page. You don't need to paste content in yourself; just ask, and it'll go look.
+
+This is handy for anything that changes faster than a model's training data — a package that shipped a breaking change last month, a platform's current pricing, a GitHub issue that was just opened. It's a fallback more than a first choice, though: for library docs specifically, a dedicated MCP server usually gets you better results (see Context7 below).
+
+## MCP: Model Context Protocol
+
+**MCP** is the standard protocol Claude Code uses to talk to external systems — databases, issue trackers, design tools, internal APIs, whatever a server chooses to expose. Instead of every integration being a one-off, an MCP server exposes a consistent set of tools and resources that Claude can call the same way it calls its built-in tools.
+
+Once a server is configured, its tools show up alongside Claude's own — a Jira MCP server might expose "create ticket" and "search issues," a Postgres one might expose "run query." Use `/mcp` to view and manage which servers are currently connected (see the [Commands and Shortcuts](/getting-started/commands-and-shortcuts/) reference for the full command list).
+
+## Context7: docs that aren't stuck in the past
+
+**Context7** is worth calling out specifically. It's an MCP server that fetches current, real code examples and documentation into context — instead of Claude relying on whatever version of a library's docs happened to be in its training data.
+
+That matters most for fast-moving packages and APIs: a Flutter package that's had three major versions since the model's training cutoff, a platform SDK that renamed half its methods. Without something like Context7, Claude's best guess is still frozen at training time. With it, Claude looks up the actual current usage before writing code against it.
+
+:::tip[Set this up once, for the whole team]
+Wiring up an MCP server like Context7 is exactly the kind of thing worth doing once at the project or org level, not re-discovering per developer. Put the setup in your shared conventions so everyone gets it for free — see [Shared Conventions and CLAUDE.md](/team-playbook/shared-conventions-and-claude-md/).
+:::
+
+<Recap question="Why would you want Context7 (or a similar MCP server) even though Claude already has broad training knowledge?">
+Training data has a cutoff date, and fast-moving packages/APIs change faster than that. Context7 fetches current, real documentation and code examples into context at the time you're actually working — so Claude is coding against what the library looks like *now*, not what it looked like whenever the model was trained. It closes the gap between "broadly knowledgeable" and "correct today."
+</Recap>

@@ -1,0 +1,51 @@
+---
+title: Prompt and Context Engineering
+description: A practical formula for writing prompts that get good results out of Claude Code, plus what not to do.
+---
+
+import QuickRefTable from '~/components/QuickRefTable.astro';
+import Recap from '~/components/Recap.astro';
+
+Claude Code is only as good as what you feed it. Most "the AI got it wrong" moments trace back to the prompt, not the model — so it's worth being deliberate about how you write them.
+
+:::tip[The formula]
+**Good Input = Specific Instructions + Relevant Context.**
+
+*Specific instructions* means clearly describing the task or problem — not a vague pointer at it. *Relevant context* means only the supporting material that's actually needed, like a spec file or an error log — not everything you can think to attach.
+:::
+
+Both halves matter, and they fail in opposite directions. Specific-but-context-free prompts leave Claude guessing at your codebase's conventions. Context-heavy-but-vague prompts bury the actual ask in noise Claude has to sort through first. You want both, and you want them lean.
+
+## Best practices
+
+<QuickRefTable caption="Prompting habits worth building">
+| Practice | What it means |
+|---|---|
+| Concise & precise | Focused prompts, no fluff |
+| No unnecessary context | Don't `@`-reference files "just in case" — only ones you know matter |
+| Think, plan, prompt | Plan before typing; use [Plan Mode](/core-workflow/plan-mode/) for anything non-trivial |
+| Don't "test" the AI | If you already know a pitfall exists, say so up front along with the fix — don't withhold known info just to see if Claude "figures it out" |
+| Explicitly name the tools | If a specific built-in tool, MCP server, subagent, or skill should be used, say so by name |
+</QuickRefTable>
+
+The "don't test the AI" one trips people up the most. If you already know the migration script fails on null timestamps, say that in the prompt. Holding it back to see whether Claude catches it too isn't a fair test — it just wastes a round trip and gives Claude less to work with than you have.
+
+:::note[The theme running through this whole guide]
+You are in control — you steer the AI. Claude Code is a very capable assistant, not a replacement for your judgment. Every technique on this page is about giving you more precise control over what Claude does, not about handing over more of the thinking.
+:::
+
+## Screenshot-based feedback
+
+You can paste a screenshot directly into a prompt to give visual feedback — no need to describe a UI bug in words when you can just show it. Combine that with `@`-references to the exact files you want touched, and Claude has both the "what's wrong" and the "where to fix it" in one message:
+
+```
+This login redirect is wrong — [pasted screenshot]. It should redirect to
+the dashboard, not back to login, and every route under /app should check
+auth state before rendering. See @app/authenticate/page.tsx and @lib/auth.ts.
+```
+
+That single prompt has a specific instruction (redirect target, plus the broader rule about routes under `/app`) and exactly the relevant context (two files, one screenshot) — nothing extra to wade through.
+
+<Recap question="What are the two halves of 'good input,' and what does each one mean?">
+**Specific instructions** — clearly describing the task or problem, not gesturing vaguely at it. **Relevant context** — only the supporting material Claude actually needs (a spec file, a screenshot, a couple of `@`-referenced files), not everything you can think to attach. Good prompts have both, kept lean.
+</Recap>

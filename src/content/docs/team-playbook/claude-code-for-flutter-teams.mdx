@@ -1,0 +1,53 @@
+---
+title: Claude Code for Flutter Teams
+description: CLAUDE.md conventions, subagents, and review habits that make Claude Code productive on a real Flutter codebase.
+---
+
+import Recap from '~/components/Recap.astro';
+
+Claude Code doesn't know your team's conventions out of the box. It doesn't know whether you're on Riverpod or Bloc, whether tests live next to the widget or in a mirrored `test/` tree, or whether "done" means "compiles" or "compiles, analyzes clean, and has a widget test." Left to guess, it'll guess reasonably — and reasonably is not the same as *your* codebase's way of doing things. This page is about closing that gap.
+
+## What belongs in a Flutter CLAUDE.md
+
+A few things are worth writing down once per repo, so Claude stops re-deriving them every session:
+
+- **State management.** Name the library you actually use — Riverpod, Bloc, Provider, whatever it is — and one line on the pattern (e.g. "`ConsumerWidget` + `AsyncNotifier`, no raw `StateProvider` for anything with async logic"). Don't try to mandate a library choice here if the team hasn't settled on one; just describe what *this* project does.
+- **Null-safety and linting.** Point at the actual `analysis_options.yaml` and mention any house rules that go beyond the default lint set (e.g. "no `!` on a nullable field without a comment explaining why it's safe").
+- **Where tests live and how to run them.** State the convention explicitly — mirrored `test/` tree vs. co-located `_test.dart` files — and give the exact command: `flutter test`. If you run golden tests separately, say so.
+- **Folder structure.** Feature-first (`lib/features/<feature_name>/{data,domain,presentation}`) or layer-first (`lib/{data,domain,presentation}/<feature_name>`) — whichever this project uses, say it plainly so new code lands in the right place on the first try instead of the third.
+- **The finish line.** `flutter analyze` should pass clean before anything is considered done — not "mostly clean," not "the same warnings as before." Say that in the file so it's not a habit you have to enforce by hand every time.
+
+None of this is exotic — it's the stuff a new hire would ask a senior dev in their first week. Writing it into CLAUDE.md means Claude has already asked, and already got the answer, before it starts.
+
+For the general mechanics of CLAUDE.md and how it fits into a session's context, see [Sessions, Context, and Memory](/core-workflow/sessions-context-and-memory/). For a shared template you can reuse across projects rather than writing this from scratch every time, see [Shared Conventions and CLAUDE.md](/team-playbook/shared-conventions-and-claude-md/).
+
+## Flutter-shaped subagents and skills
+
+Generic Claude, asked to "add a new screen," will produce *a* widget. It won't necessarily produce *your* widget — the one that matches how the rest of the app is structured. That's a good fit for a purpose-built subagent or skill rather than repeating the same instructions in every prompt.
+
+A **widget-scaffolder** subagent, for example, can be told once: whether new screens default to `StatelessWidget`, `StatefulWidget`, or a Riverpod `ConsumerWidget`; where shared styles and constants live (`lib/core/theme/`, a `AppColors` class, whatever the convention is); and how screens wire up navigation in this app. Ask for a new screen after that, and you get something that looks like it was written by the team, not by a tutorial.
+
+A **test-writer** skill pays off the same way. "Write a test for this widget" from scratch tends to produce generic `testWidgets` boilerplate that pumps a widget and checks it doesn't throw — technically a test, not actually useful. A skill that knows your team writes widget tests *and* golden tests, knows where fixtures and golden files live, and knows what a "real" test looks like on this project will produce something a reviewer doesn't have to rewrite.
+
+The value of both isn't that they do something Claude couldn't do if asked directly — it's that they encode the answer once, so you're not re-explaining your team's conventions in every prompt, and so the output is consistent regardless of who's driving the session that day.
+
+See [Subagents](/extending-claude/subagents/) and [Skills and Commands](/extending-claude/skills-and-commands/) for how to actually set these up.
+
+## Reviewing AI-generated Dart before it merges
+
+Treat a Claude-authored diff exactly like a PR from a teammate you haven't paired with before — read it, don't just check that it built. A short checklist worth running through:
+
+- Does it follow this project's actual state-management pattern, or did it improvise something adjacent?
+- Did it pull in a new dependency, and if so, is there a real reason — or was it easier for the model than using something already in `pubspec.yaml`?
+- Does `flutter analyze` pass clean — not "the same as before," clean?
+- Is there a widget test for any new UI, and does it test real behavior rather than just "the widget builds"?
+- Does error-handling and null-safety style match the rest of the codebase, or does it stand out as visibly different?
+- Would a teammate who wasn't in the session understand this diff on its own — or does it only make sense with an explanation you'd have to give them in Slack?
+
+That last one is the real test. If the answer is no, the diff needs more work before it's someone else's problem to untangle.
+
+For turning `flutter analyze` and `flutter test` into an actual feedback loop Claude runs against as it works, rather than a checklist you run after the fact, see [Tests and Browser Feedback](/automation-and-feedback-loops/tests-and-browser-feedback/).
+
+<Recap question="Why would a Flutter-specific subagent produce better scaffolding than just asking Claude directly each time?">
+Because it encodes your team's actual conventions — which widget base class to default to, where styles and constants live, how tests are structured — once, instead of relying on you to restate them accurately in every prompt. Asking directly works fine if you remember every convention and type it out every time; a subagent makes the correct-by-default output the *default*, not something that depends on how thorough that day's prompt happened to be.
+</Recap>

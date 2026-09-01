@@ -1,0 +1,33 @@
+---
+title: Cloud and Web Sessions
+description: Run Claude Code tasks in the cloud and move between browser, terminal, and mobile without losing the thread.
+---
+
+import QuickRefTable from '~/components/QuickRefTable.astro';
+import Recap from '~/components/Recap.astro';
+
+Claude Code Web/Cloud lets you run multiple coding tasks in the cloud and move between browser, terminal, and mobile as it suits you. Connect a GitHub repo, and you can start and manage cloud sessions from there — no local checkout required just to kick something off.
+
+## Commands
+
+<QuickRefTable caption="Cloud/remote session commands">
+| Command | Effect |
+|---|---|
+| `run remote-env` | Start a cloud/remote environment |
+| `claude --remote ""` | Run a task in the background on the cloud |
+| `claude --remote -c` | Continue your last remote conversation |
+</QuickRefTable>
+
+:::tip[When to reach for this]
+This is the natural home for longer-running or lower-urgency tasks — kick one off, go do something else, come back to review. If you need to babysit it in real time, a local session is probably the better fit.
+:::
+
+## How this relates to Dispatch and Routines
+
+If you've read [Mobile and Remote Control](/beyond-the-terminal/mobile-and-remote-control/), Dispatch is really "starting something new in the cloud" — which is exactly what this page covers, just from a different entry point (your phone, instead of a browser or `--remote` flag).
+
+If what you want is a cloud task that runs on a recurring schedule rather than one-off, that's covered in [Scheduled Routines](/beyond-the-terminal/scheduled-routines/).
+
+<Recap question="What has to be true about a task for it to make sense as a cloud/remote session rather than a local one?">
+It should be self-contained enough to run without you watching it step by step, and tolerant of not needing your machine to be on. Longer-running or lower-urgency work — where you're fine kicking it off and checking back later from whatever device is in front of you — fits well. Tasks that need tight, real-time steering or quick back-and-forth are usually better run locally.
+</Recap>

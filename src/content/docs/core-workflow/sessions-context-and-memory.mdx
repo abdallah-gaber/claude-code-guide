@@ -1,0 +1,86 @@
+---
+title: Sessions, Context, and Memory
+description: How Claude Code's context window fills up, what compaction does about it, and how CLAUDE.md and Auto Memory divide the job of remembering things.
+---
+
+import CompareCard from '~/components/CompareCard.astro';
+import QuickRefTable from '~/components/QuickRefTable.astro';
+import Recap from '~/components/Recap.astro';
+
+Every session has a context window — a finite budget of tokens Claude can hold onto at once. It fills up faster than you'd expect, and understanding what's eating it (and what Claude Code does when it runs out) will save you from a lot of confusing mid-task weirdness.
+
+## The context window fills up fast
+
+Every file Claude reads, every tool result, every line of code it writes back to you — it all consumes tokens. A session that starts by reading three files and grepping the codebase has already spent a chunk of its budget before you've asked for anything.
+
+When the window fills up, Claude Code doesn't just stop. It **auto-compacts**: it generates a summary of everything so far, plus instructions for how to continue, and keeps working from that summary instead of the full history. It's a genuinely useful safety net — but summarization is lossy by definition. Some detail from earlier in the session won't survive the trip.
+
+You can trigger this yourself with `/compact`, ahead of a token-heavy task, instead of letting it happen automatically mid-task. Compacting deliberately — say, right before you ask Claude to do a large refactor — means you control *when* detail gets thinned out, rather than finding out partway through a big job that Claude just quietly forgot something important.
+
+:::tip[Keep sessions concise and focused]
+The best fix for context bloat is not letting it build up in the first place. Start a new session — a fresh terminal, or `/clear` — per new feature or task, rather than dragging one long session through your whole day.
+
+This matters even more when you're stuck. If you're several messages deep into fighting a bug and Claude keeps missing the point, it's usually faster to start over with a clean session and a sharper description of the problem than to keep arguing with a context that's gotten confused.
+:::
+
+## Background runs, resuming, and rewinding
+
+A quick recap — full details live on the [Commands and Shortcuts](/getting-started/commands-and-shortcuts/) reference page:
+
+<QuickRefTable caption="Session controls">
+| Command | What it does |
+|---|---|
+| `claude -p "..."` | Run once in the background, non-interactively — you just get the final response |
+| `claude -c` | Resume the most recent session, with its context intact |
+| `/rewind` (or Esc, Esc) | Roll back to an earlier point in the current session |
+</QuickRefTable>
+
+## CLAUDE.md vs. Auto Memory
+
+Claude Code has two different mechanisms for "remembering things across time," and they solve different problems. Mixing them up is a common source of confusion.
+
+<CompareCard
+  leftTitle="CLAUDE.md — you maintain it"
+  leftTone="neutral"
+  leftPoints={[
+    'Created via /init the first time you set up a project',
+    'Read at the start of every single prompt in that project',
+    'Holds general instructions that should stay true across the whole project',
+    'Should stay focused and concise — not a dumping ground for every rule you\'ve ever thought of',
+  ]}
+  rightTitle="Auto Memory — Claude maintains it"
+  rightTone="neutral"
+  rightPoints={[
+    'A recent version of Claude Code introduced this feature',
+    'Claude stores things it learns on its own — e.g. a style correction you gave it repeatedly',
+    'Stored under ~/.claude/projects/<project>/memory/ as MEMORY.md plus optional topic files',
+    'Roughly the first 200 lines load automatically into every new conversation; full files load as needed',
+    'Managed via /memory',
+  ]}
+/>
+
+:::caution[Auto Memory isn't a CLAUDE.md replacement]
+Auto Memory is additive, not a substitute. It picks up things Claude happens to notice and remember — it's not a guarantee. Anything that should *always* be true for the project — your architecture, your conventions, your non-negotiables — still belongs explicitly in `CLAUDE.md`. Don't rely on Claude to have "remembered" something load-bearing.
+:::
+
+Here's a realistic `CLAUDE.md` for a Flutter project — not exhaustive, just the things that actually need saying every time:
+
+```markdown
+# Project conventions
+
+This is a Flutter app. See @docs/SPEC.md for the full feature spec.
+
+- Keep replies concise — no restating the plan back to me unless asked.
+- Use Riverpod for state management; don't introduce another state management library.
+- Before using any third-party package's API, look up current usage via the
+  DocsExplorer subagent — don't rely on training data for third-party API shapes.
+- Run `flutter analyze` before considering a task done.
+```
+
+Notice the three things doing real work in that snippet: an `@`-reference that pulls in a full spec file on demand, explicit project conventions that aren't obvious from the code alone, and a mandate to use a specific subagent instead of guessing. That's a `CLAUDE.md` that earns its place at the start of every prompt.
+
+<Recap question="What's the difference between CLAUDE.md and Auto Memory, and can Auto Memory replace CLAUDE.md?">
+`CLAUDE.md` is a file *you* write and maintain, loaded at the start of every prompt — it's where project-wide, always-true conventions live. Auto Memory is maintained *by Claude*, capturing things it picks up along the way (like a repeated correction), stored under `~/.claude/projects/<project>/memory/` and managed via `/memory`.
+
+No, Auto Memory can't replace `CLAUDE.md` — it's additive. Anything that must always hold true for the project still needs to be spelled out explicitly in `CLAUDE.md`, because Auto Memory only reflects what Claude happened to learn, not what you require.
+</Recap>

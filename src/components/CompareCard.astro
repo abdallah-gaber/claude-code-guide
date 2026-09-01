@@ -1,0 +1,90 @@
+---
+interface Props {
+  leftTitle: string;
+  leftTone?: 'bad' | 'good' | 'neutral';
+  leftPoints: string[];
+  rightTitle: string;
+  rightTone?: 'bad' | 'good' | 'neutral';
+  rightPoints: string[];
+}
+
+const {
+  leftTitle,
+  leftTone = 'neutral',
+  leftPoints,
+  rightTitle,
+  rightTone = 'neutral',
+  rightPoints,
+} = Astro.props;
+---
+
+<div class="compare-grid">
+  <div class={`compare-card tone-${leftTone}`}>
+    <p class="compare-title">{leftTitle}</p>
+    <ul>
+      {leftPoints.map((point) => <li>{point}</li>)}
+    </ul>
+  </div>
+  <div class={`compare-card tone-${rightTone}`}>
+    <p class="compare-title">{rightTitle}</p>
+    <ul>
+      {rightPoints.map((point) => <li>{point}</li>)}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  @media (min-width: 50rem) {
+    .compare-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .compare-card {
+    border: 1px solid var(--sl-color-hairline);
+    border-left-width: 4px;
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--sl-color-bg-nav);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .compare-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .compare-card.tone-bad {
+    border-left-color: var(--sl-color-red);
+  }
+
+  .compare-card.tone-good {
+    border-left-color: var(--sl-color-green);
+  }
+
+  .compare-card.tone-neutral {
+    border-left-color: var(--sl-color-accent);
+  }
+
+  .compare-title {
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    font-size: var(--sl-text-lg);
+  }
+
+  .compare-card ul {
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+
+  .compare-card li {
+    margin: 0.35rem 0;
+  }
+</style>

@@ -1,0 +1,74 @@
+---
+interface Props {
+  question: string;
+}
+
+const { question } = Astro.props;
+---
+
+<details class="recap">
+  <summary>
+    <span class="recap-badge">Check yourself</span>
+    {question}
+  </summary>
+  <div class="recap-answer">
+    <slot />
+  </div>
+</details>
+
+<style>
+  .recap {
+    margin: 1.25rem 0;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    padding: 0.15rem 1rem;
+    background: var(--sl-color-bg-nav);
+  }
+
+  .recap summary {
+    cursor: pointer;
+    padding: 0.75rem 0;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .recap summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .recap summary::before {
+    content: '▸';
+    color: var(--sl-color-accent);
+    transition: transform 0.15s ease;
+  }
+
+  .recap[open] summary::before {
+    transform: rotate(90deg);
+  }
+
+  .recap-badge {
+    font-size: var(--sl-text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--sl-color-accent);
+    border: 1px solid var(--sl-color-accent);
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+  }
+
+  .recap-answer {
+    padding: 0 0 1rem 1.6rem;
+  }
+
+  .recap-answer :global(p:first-child) {
+    margin-top: 0;
+  }
+
+  .recap-answer :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

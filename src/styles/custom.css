@@ -1,0 +1,52 @@
+/* Claude-orange accent theme — distinct from the portfolio's aurora-blue identity */
+:root {
+  --sl-color-accent-low: #4d2c1f;
+  --sl-color-accent: #d97757;
+  --sl-color-accent-high: #ffd9c7;
+  --sl-color-red: #e5534b;
+  --sl-color-green: #3fb950;
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #ffe4d6;
+  --sl-color-accent: #c05f3f;
+  --sl-color-accent-high: #6d2f1a;
+  --sl-color-red: #cf222e;
+  --sl-color-green: #1a7f37;
+}
+
+/* Slightly warmer hairlines/nav background so cards feel intentional, not default-Starlight */
+:root {
+  --sl-color-hairline: #30363d;
+  --sl-color-bg-nav: #14171c;
+}
+
+:root[data-theme='light'] {
+  --sl-color-hairline: #e2d9d2;
+  --sl-color-bg-nav: #fbf4ef;
+}
+
+/* Makes a Starlight <Card> actually clickable — this Starlight version's <Card> has no
+   `href` prop, so link-cards are wrapped in a real <a> instead (see LinkCard.astro). */
+.card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-link .card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+
+.card-link:hover .card,
+.card-link:focus-visible .card {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card-link:focus-visible {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}

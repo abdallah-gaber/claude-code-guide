@@ -1,0 +1,44 @@
+---
+title: Desktop App
+description: The Claude Code Desktop app — Projects, Cowork, git worktrees, and per-chat controls, all on top of the same engine as the CLI.
+---
+
+import QuickRefTable from '~/components/QuickRefTable.astro';
+import Recap from '~/components/Recap.astro';
+
+The Desktop app isn't a different tool from the CLI you've been using — it's the same agent, same models, same underlying loop, wrapped in a GUI. What it adds is organization (Projects), a mode for non-coding work (Cowork), and some conveniences around running things safely in parallel.
+
+## What it gives you
+
+<QuickRefTable caption="Desktop app capabilities">
+| Capability | What it gives you |
+|---|---|
+| Projects | Group all chats for a project — shared context, one place per codebase/goal |
+| Cowork | A general work assistant, not just for code — e.g. helps draft slides or other knowledge-work deliverables |
+| Git worktrees | Run tasks on isolated worktrees so parallel sessions don't collide with each other's file changes |
+| Per-chat controls | Choose model + effort level, attach files, use commands — same steering power as the CLI, friendlier UI |
+</QuickRefTable>
+
+:::note[The mental model]
+Same underlying engine, GUI on top. **Projects** is for organization — one home per codebase or goal, with shared context across chats. **Cowork** is for work that isn't code. **Worktrees** are for safe parallelism — running more than one task at a time without them stepping on each other's file changes.
+:::
+
+## Desktop-specific settings
+
+:::caution[The Desktop app has its own settings]
+These live under **Settings → Claude Code** in the Desktop app. They're separate from your CLI config (`settings.json`, `CLAUDE.md`, etc.) and won't automatically match it — check both if behavior seems inconsistent between the two.
+
+- **Allow bypass permissions mode** — the Desktop equivalent of `--dangerously-skip-permissions`. Same caution applies as on the CLI: see [Security and Client Data](/team-playbook/security-and-client-data/) before turning this on, especially on a machine with client codebases on it.
+- **Draw attention on notifications** — flags the app when input is needed or a task finishes. Worth enabling for anything you kick off and then walk away from.
+- **Worktree location** — where on disk new git worktrees get created.
+:::
+
+Adding new skills or plugins doesn't require touching the filesystem either — you can browse and install them directly from the Desktop UI.
+
+## Not just for code
+
+The same agent loop — read files, use tools, produce output, iterate — works for non-coding work too, especially through Cowork: drafting and organizing documents and reports, research and summarizing, automating repetitive non-coding chores. Claude Code isn't only for code, and the Desktop app is where that's most obvious.
+
+<Recap question="What's the actual difference between a 'Project' and a git 'worktree' in the Desktop app?">
+They solve different problems. A **Project** is an organizational container — it groups related chats together so they share context, giving you one place per codebase or goal. A **worktree** is a filesystem-level isolation mechanism — a separate working copy of your git repo so that a task running in it can't collide with file changes from another task running in parallel. You can have multiple worktrees inside one Project.
+</Recap>

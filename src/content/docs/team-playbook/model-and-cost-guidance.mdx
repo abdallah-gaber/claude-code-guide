@@ -1,0 +1,43 @@
+---
+title: Model and Cost Guidance
+description: A practical, durable way to decide which model tier a task actually needs.
+---
+
+import QuickRefTable from '~/components/QuickRefTable.astro';
+import Recap from '~/components/Recap.astro';
+
+Bigger models cost more, per token and often per minute of your patience waiting on them. That's fine when the task actually needs the extra capability — it's wasted spend when it doesn't. This page is about the shape of that decision, not about memorizing current prices.
+
+## The general shape
+
+- **Smaller, faster models** are good at cheap, high-volume, low-ambiguity work — renames, small mechanical fixes, boilerplate you could describe in one sentence. The task is well-specified enough that there's not much room to get it wrong.
+- **A mid-tier model** is the right default for most day-to-day coding. Everyday feature work, typical bug fixes, routine refactors — this is where most of a session's time actually goes, and a mid-tier model handles it well without you thinking about the choice.
+- **The top tier** earns its cost on genuinely hard, high-ambiguity, or high-stakes work — architecture decisions, tricky bugs that have resisted a first pass, anything where getting it wrong is expensive to unwind later. That's exactly the kind of task where paying more for a better first attempt is cheaper than paying twice for two attempts.
+
+## A rough decision guide
+
+<QuickRefTable caption="Task shape → model tier">
+| Task shape | Reasonable default |
+|---|---|
+| Routine, well-specified changes (rename, small fix, boilerplate) | Fastest/cheapest tier is usually enough |
+| Everyday feature work | Mid-tier — the right default for most sessions |
+| Architecture decisions, tricky bugs, high-stakes client code | Top tier, worth the cost |
+</QuickRefTable>
+
+This is a starting point, not a rule — if the fast tier is visibly struggling with something you expected to be routine, that's your signal to move up a tier rather than iterating five more times at the cheap one.
+
+## Effort is a separate dial from model tier
+
+Model choice isn't the only lever. Some tasks benefit from explicitly dialing reasoning effort up or down within the same model — more effort for a genuinely hard problem, less for something simple and obvious where extra deliberation just burns time. Don't reach for a bigger model as the only way to get more careful reasoning if turning up the effort on the model you're already using gets you there. See [Configuration](/getting-started/configuration/) for the thinking-mode toggle, and [Choosing Models](/getting-started/choosing-models/) for the mechanics of switching tiers mid-session.
+
+:::tip[Don't default to the biggest model "just in case"]
+It's tempting to always reach for the top tier so you never have to think about whether it was warranted. Resist that — it's real, recurring team spend, and most day-to-day work doesn't need it. Reserve escalation for when a smaller model is visibly stuck on something, or the task is clearly high-stakes going in.
+:::
+
+:::note[Names and numbers change]
+Exact model names, tiers, and pricing shift over time — this page is about the *shape* of the decision (cheap-and-fast vs. capable-default vs. top-tier-for-hard-problems), not specific current figures. Check current pricing and model docs when the numbers actually matter to a decision.
+:::
+
+<Recap question="What's a concrete signal that a task should get escalated to the top-tier model mid-session?">
+The mid-tier model gets visibly stuck — going in circles on the same bug across a few attempts, proposing fixes that don't hold up, or clearly misunderstanding the shape of the problem — or the task turns out to be higher-stakes than it looked at the start (an architecture decision, something touching client production data). Either one is a better trigger than a fixed rule, since it's based on what's actually happening in the session rather than a guess made before starting.
+</Recap>

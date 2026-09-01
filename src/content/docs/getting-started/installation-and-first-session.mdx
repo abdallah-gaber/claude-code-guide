@@ -1,0 +1,68 @@
+---
+title: Installation and First Session
+description: Install Claude Code and start your first session — the commands, the flags, and what a real session looks like.
+---
+
+import { CardGrid } from '@astrojs/starlight/components';
+import LinkCard from '~/components/LinkCard.astro';
+import QuickRefTable from '~/components/QuickRefTable.astro';
+import TerminalDemo from '~/components/TerminalDemo.tsx';
+
+## Installing it
+
+Claude Code has a couple of supported install paths — most commonly `npm install -g @anthropic-ai/claude-code`, or a native installer script for your OS. Both are fine; check the [current docs](https://docs.anthropic.com/en/docs/claude-code) for whichever is fastest on your machine today, since the recommended path has shifted before and will probably shift again.
+
+Once it's installed, run `claude` from inside any project directory to start.
+
+## The mindset, in one sentence
+
+Before you type anything: Claude Code is a steering wheel, not an autopilot — you stay in the loop and review what it produces, you don't just vibe your way to "done." (Full framing is on the [home page](/) if you haven't read it yet.)
+
+## Starting a session
+
+There's more than one way to launch `claude`, depending on what you're trying to do:
+
+<QuickRefTable caption="Ways to start a session">
+| Command | Effect |
+|---|---|
+| `claude` / `claude "my prompt"` | Start a new session, with an optional initial prompt |
+| `claude -p "my prompt"` | One-shot query, no interactive session, just returns the response |
+| `claude -c` | Continue/resume your most recent session |
+| `claude --agent DocsExplorer` | Start with a specific custom agent active |
+| `claude --permission-mode plan` | Start straight into Plan Mode |
+| `claude --remote "Add dark mode"` | Start a remote (cloud) session |
+</QuickRefTable>
+
+`claude -p` is worth calling out separately: it's for scripting and quick lookups, not for actual work. If you want to have a conversation and iterate, use a regular interactive session.
+
+## What a session actually looks like
+
+Here's a small, realistic run: asking for a feature, Claude reading a file and proposing a change, a permission prompt, and wrapping up with `/compact`.
+
+<TerminalDemo client:load title="claude" lines={[
+  { type: 'input', text: 'claude "add a dark mode toggle to the settings screen"' },
+  { type: 'output', text: 'Reading lib/screens/settings_screen.dart...' },
+  { type: 'output', text: "I'll add a ThemeMode toggle backed by SharedPreferences. Proceeding..." },
+  { type: 'comment', text: "Claude asks permission before editing a file it hasn't touched yet" },
+  { type: 'output', text: 'Edit lib/screens/settings_screen.dart? (y/n)' },
+  { type: 'input', text: 'y' },
+  { type: 'output', text: 'Done. Added a toggle + persisted preference.' },
+  { type: 'comment', text: 'Wrapping up before context gets cluttered' },
+  { type: 'input', text: '/compact' },
+  { type: 'output', text: 'Context compacted — ready for the next task.' },
+]} />
+
+Notice the shape: Claude reads before it writes, it asks before it touches a file for the first time in that session, and `/compact` keeps the context window lean once a task is done. That rhythm — read, propose, confirm, act — is most of what you need to know to get started.
+
+## What's next
+
+<CardGrid>
+	<LinkCard title="Configuration" icon="setting" href="/getting-started/configuration/">
+		Set up the three config tiers (global, project, local) so Claude Code behaves consistently
+		across your team.
+	</LinkCard>
+	<LinkCard title="Plan Mode" icon="pencil" href="/core-workflow/plan-mode/">
+		Have Claude think through an approach before it touches any code — especially useful for
+		anything bigger than a one-file fix.
+	</LinkCard>
+</CardGrid>

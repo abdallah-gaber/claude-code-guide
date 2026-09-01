@@ -1,0 +1,28 @@
+---
+title: Scheduled Routines
+description: Recurring Claude Code tasks that run on a schedule instead of by hand — and how to pick good candidates for it.
+---
+
+import Recap from '~/components/Recap.astro';
+
+Routines are scheduled Claude Code tasks — recurring checks, reports, or clean-ups that run automatically instead of you remembering to kick them off by hand.
+
+:::note[Naming may drift]
+Exact product naming for scheduled-task features can change over time. If "Routines" isn't what you see in the product today, check current docs — the underlying idea (a task that runs on a schedule without you) is what matters here.
+:::
+
+## Good candidates for this team
+
+A few examples that map onto real Flutter-team chores:
+
+- **A weekly dependency-update check** — run `flutter pub outdated`, summarize what's safe to bump, flag anything with breaking changes.
+- **A recurring "summarize open PRs" report** — pull the state of open PRs and post a digest so nothing goes stale unreviewed.
+- **A nightly lint/format sweep** — catch formatting drift before it piles up into a painful review.
+
+## Wrapping up "Beyond the Terminal"
+
+Desktop, mobile, Remote Control, Dispatch, messaging integrations, and Routines are all the same core agent loop — read, act, iterate — extended past a single local terminal session. None of them is "better" in the abstract. Pick the surface that matches how urgently you need to be in the loop for a given task, not the fanciest one available.
+
+<Recap question="Give one good candidate task for a Routine, and one bad candidate (something that shouldn't just run unattended on a schedule).">
+Good: a nightly lint/format sweep, or a weekly dependency-update check — low-stakes, easily reviewable, safe to let run without a human watching. Bad: anything that pushes to production, deletes data, or makes irreversible changes to a client's live system — those need a human in the loop approving each step, not a schedule quietly firing them off.
+</Recap>

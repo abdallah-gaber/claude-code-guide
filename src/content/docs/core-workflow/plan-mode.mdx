@@ -1,0 +1,39 @@
+---
+title: Plan Mode
+description: How Plan Mode turns an underspecified prompt into a good one before Claude touches any code.
+---
+
+import Recap from '~/components/Recap.astro';
+
+Plan Mode changes what Claude does with your prompt before it acts on it. Instead of immediately reading files and writing code, Claude first gathers relevant context, asks clarifying questions where your request is ambiguous, and turns an average, underspecified prompt into a good one — before touching anything.
+
+:::tip[When to use it]
+Reach for Plan Mode on any non-trivial task. A small, obvious one-liner — fix this typo, rename this variable — doesn't need it. But anything where more than one reasonable approach exists benefits from a round of planning before code gets written.
+:::
+
+## How to invoke it
+
+Two ways to get into Plan Mode:
+
+- Launch directly into it: `claude --permission-mode plan`
+- Toggle it mid-session with **Shift+Tab**, which cycles through permission modes (see [Commands and Shortcuts](/getting-started/commands-and-shortcuts/) for the full list)
+
+## What a clarifying question looks like
+
+Say you ask Claude to "add a loading state to the profile screen." A vague prompt like that has more than one reasonable interpretation, and Plan Mode is where that gets surfaced instead of silently guessed at:
+
+```
+Before I plan this out — a couple of things I want to confirm:
+
+1. The app already has a LoadingIndicator widget used on the settings and
+   orders screens. Should the profile screen reuse that, or does this need
+   something different (e.g. a skeleton loader)?
+2. Should the loading state cover just the avatar/name fetch, or the whole
+   screen including the activity feed below it?
+```
+
+That's the value of Plan Mode in one exchange: it catches the ambiguity — which existing pattern to follow, which scope was meant — before Claude writes a single line, instead of after you've reviewed a diff that guessed wrong.
+
+<Recap question="Why use Plan Mode instead of just describing the task directly?">
+Plan Mode makes Claude gather context and ask clarifying questions *before* it starts changing code, instead of guessing at ambiguous parts of your request and possibly building the wrong thing. For anything with more than one reasonable approach, that upfront round of questions is cheaper than reviewing (and redoing) a diff based on a wrong assumption.
+</Recap>

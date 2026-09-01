@@ -1,0 +1,52 @@
+---
+title: Mobile and Remote Control
+description: Kick off tasks from your phone, or steer an already-running local session remotely — two different patterns, easy to conflate.
+---
+
+import CompareCard from '~/components/CompareCard.astro';
+import Recap from '~/components/Recap.astro';
+
+Claude Code doesn't need you sitting at your desk to keep moving. There are two distinct ways to work with it away from your machine, and they solve different problems — worth keeping straight before you reach for either.
+
+## Mobile dispatch
+
+The mobile app lets you kick off a coding task from your phone. It runs as a cloud session — not on your laptop — so you don't need a terminal open, or even your computer turned on. You check on it later from mobile, browser, or desktop, whichever's in front of you.
+
+The flow has three parts:
+
+1. **Start anywhere** — no terminal needed, just the mobile app and a prompt.
+2. **Monitor progress** — check in on what it's doing and review output as it comes in.
+3. **Continue seamlessly** — once you're back at your desk, pick the session back up like you never left.
+
+## Remote Control
+
+Remote Control is a different thing: it connects an *already-running local session* to another device. You run `/remote-control` inside a session that's already active on your machine, and from that point you can steer it or approve its permission prompts from your phone.
+
+The key word is "already-running" — Remote Control doesn't start anything new. It hands you a remote steering wheel for a session that exists on your machine right now.
+
+## The key distinction
+
+<CompareCard
+  leftTitle="Remote Control — your machine"
+  leftTone="neutral"
+  leftPoints={[
+    'Takes over an existing local CLI session from your phone or another device',
+    "Work runs on your machine, your environment, your files",
+    'Great for steering something already running, or approving a permission prompt while away from your desk',
+  ]}
+  rightTitle="Dispatch — the cloud"
+  rightTone="neutral"
+  rightPoints={[
+    'Starts a brand-new task in a cloud environment tied to your repo',
+    'Runs independently of your computer — which can even be off',
+    'Great for kicking off a fresh, self-contained task while on the go',
+  ]}
+/>
+
+:::tip[Rule of thumb]
+Continuing or steering something already running locally → **Remote Control**. Starting something new that should run without your machine being on → **Dispatch**.
+:::
+
+<Recap question="You're mid-commute and remember a permission prompt is probably waiting on your desktop session. Remote Control or Dispatch?">
+Remote Control. The session is already running on your desktop machine — you're not starting anything new, you're steering and approving something that exists there right now. Dispatch would start a brand-new cloud task instead, which doesn't help you unblock the session waiting at your desk.
+</Recap>

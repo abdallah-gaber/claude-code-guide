@@ -1,0 +1,66 @@
+---
+title: Commands and Shortcuts
+description: A scannable reference of Claude Code's slash commands, CLI flags, and keyboard shortcuts.
+---
+
+import QuickRefTable from '~/components/QuickRefTable.astro';
+
+This page is a reference, not a tutorial — scan it, don't read it top to bottom. Come back whenever you need the exact name of something.
+
+## Slash commands
+
+<QuickRefTable caption="In-session commands">
+| Command | What it does |
+|---|---|
+| `/help` | List available commands |
+| `/model` | Choose the model for this session |
+| `/clear` | Clear context and start fresh in the same terminal |
+| `/compact` | Compact context (summarize) without fully clearing it |
+| `/config` | Open interactive settings |
+| `/context` | View context window stats/usage |
+| `/usage` | View remaining plan usage |
+| `/init` | Analyze the project and scaffold an initial `CLAUDE.md` |
+| `/mcp` | View/manage connected MCP servers |
+| `/permissions` | View/manage tool permissions |
+| `/rewind` | Undo to an earlier point in the session (same as pressing Esc twice) |
+| `/statusline` | Configure the status line |
+| `/teleport` | Resume a remote/cloud session locally |
+| `/memory` | View/manage Claude's auto-memory files |
+| `/remote-control` | Connect an already-running local session to another device |
+</QuickRefTable>
+
+## CLI flags
+
+<QuickRefTable caption="Flags for `claude`">
+| Flag | Effect |
+|---|---|
+| `--allowedTools "Read" "Write"` | Restrict to only the listed tools |
+| `--disallowedTools "Write"` | Block specific tools |
+| `--dangerously-skip-permissions` | Skip all permission prompts |
+| `--append-system-prompt "..."` | Add to the default system prompt |
+| `--system-prompt "..."` | Replace the entire default system prompt |
+| `--model opus` | Set the model for this launch |
+| `--permission-mode plan` | Start directly in Plan Mode |
+</QuickRefTable>
+
+:::caution[--dangerously-skip-permissions removes your safety net]
+This flag skips every permission prompt — Claude can read, write, and run commands without asking first. The name isn't decoration; it's a genuine footgun on anything touching real code or client data. See [Security and Client Data](/team-playbook/security-and-client-data/) before you reach for it.
+:::
+
+## Keyboard shortcuts
+
+<QuickRefTable caption="Shortcuts inside a session">
+| Shortcut | Effect |
+|---|---|
+| Shift+Enter / Option+Enter / Ctrl+J | Insert a new line without submitting |
+| Shift+Tab | Cycle modes |
+| Ctrl+C | Cancel the current action |
+| Esc, Esc (double-tap) | Restore code to before the last action (same as `/rewind`) |
+| Option/Alt+P | Switch model |
+| ↑ / ↓ | Cycle through past messages/options |
+| Ctrl+O | Toggle verbose output |
+| Ctrl+B | Move the current task to the background |
+| Ctrl/Cmd/Alt+V | Insert text or an image from the clipboard |
+</QuickRefTable>
+
+This page is meant to be bookmarked. For an even more condensed, printable version, see the [Cheat Sheet](/reference/cheat-sheet/).

@@ -1,0 +1,50 @@
+---
+title: Subagents
+description: Specialized agents with their own instructions and restricted tool access, invoked for a specific kind of task.
+---
+
+import Recap from '~/components/Recap.astro';
+
+A **subagent** is a specialized version of Claude: its own instructions, its own restricted set of tools, scoped to handling one specific kind of task well. Instead of your main session doing everything with every tool available, you hand off a narrow job to something built just for it.
+
+## Where they live
+
+Subagents are defined as markdown files under `.claude/agents/*.md`. Each file starts with YAML front-matter, followed by the agent's actual instructions.
+
+Here's a real example — a documentation-lookup subagent:
+
+```yaml
+---
+name: DocsExplorer
+description: Documentation lookup specialist. Use proactively
+  when needing docs for any library, framework, or technology.
+tools: WebFetch, WebSearch, Skill, MCPSearch
+model: sonnet
+---
+```
+
+The instructions that follow this front-matter tell `DocsExplorer` how to actually do its job: prefer a Context7 lookup first, fall back to a general web search if that doesn't have what's needed, prefer machine-readable formats like `llms.txt` or plain `.md` over scraping rendered HTML, and run multiple lookups in parallel when it needs docs for several things at once rather than doing them one at a time.
+
+:::note[Tool names can shift]
+`MCPSearch` and other built-in tool names are worth double-checking against current docs before you rely on them — exact names can change between Claude Code versions.
+:::
+
+## Invoking a subagent
+
+You can call one explicitly:
+
+```
+claude --agent DocsExplorer
+```
+
+Or Claude can invoke it proactively, on its own, in the middle of a session — but only if the `description` field tells it to. `DocsExplorer`'s description literally says "Use proactively when needing docs for any library, framework, or technology," which is what gives Claude permission to reach for it unprompted.
+
+:::tip[The description field does double duty]
+It's not just a label for humans skimming a list of subagents — it's the *discovery signal* Claude itself reads to decide whether this subagent is relevant to what it's currently doing. Write it like you're pitching the subagent's use case ("use this when X"), not just naming what it is. A vague or purely descriptive `description` means Claude will rarely reach for it on its own.
+:::
+
+For a Flutter-specific subagent idea worth setting up on your team, see [Claude Code for Flutter Teams](/team-playbook/claude-code-for-flutter-teams/).
+
+<Recap question="What two things does a subagent's `description` field actually do?">
+It documents what the subagent is for (for any human reading the list of agents), and it serves as the discovery signal Claude uses at runtime to decide whether to invoke this subagent proactively, without being asked. If you want a subagent to trigger automatically, the `description` needs to explicitly say when — a vague label won't cause proactive invocation.
+</Recap>

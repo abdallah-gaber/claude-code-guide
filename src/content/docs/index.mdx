@@ -1,0 +1,93 @@
+---
+title: Claude Code, Practically
+description: A fun, practical guide to Claude Code — built by a Flutter team lead at LinkDev for his team, and shared as a free resource for anyone finding it useful.
+template: splash
+hero:
+  tagline: The steering wheel, not the autopilot. A practical guide to using Claude Code well — written for a real mobile team, shared with anyone who wants it.
+  actions:
+    - text: Start with Getting Started
+      link: /getting-started/installation-and-first-session/
+      icon: right-arrow
+      variant: primary
+    - text: Jump to the Cheat Sheet
+      link: /reference/cheat-sheet/
+      icon: right-arrow
+      variant: minimal
+---
+
+import { CardGrid } from '@astrojs/starlight/components';
+import CompareCard from '~/components/CompareCard.astro';
+import LinkCard from '~/components/LinkCard.astro';
+
+## Why this guide exists
+
+I lead a Flutter team at [LinkDev](https://abdallahgaber.dev). This guide's first seed came from
+a Claude Code course that my teammate [Ismail Elmogy](https://www.linkedin.com/in/ismail-elmogy/)
+took and generously shared with the rest of us — the notes were good, but scattered across slide
+decks and written for a general audience rather than for a team shipping real client apps under
+real deadlines. This guide is what came out of turning that material into something we actually
+use day to day: fewer slides, more "here's exactly what to type and why."
+
+It's public and free. If you're not on my team and you find it useful anyway — welcome, that's
+the point. Consider it a small giving-back project from LinkDev to the wider dev community.
+
+## The one idea that matters most
+
+Everything else in this guide is detail. This is the thesis:
+
+<CompareCard
+  leftTitle="Vibe coding"
+  leftTone="bad"
+  leftPoints={[
+    'Go with the flow, no code-specific instructions',
+    'No real code review of what gets generated',
+    'Fast to start, expensive to maintain',
+  ]}
+  rightTitle="Agentic engineering (this guide)"
+  rightTone="good"
+  rightPoints={[
+    'You stay in control — you steer the AI',
+    'You give specific instructions: libraries, patterns, conventions',
+    'Code review is part of the loop, not an afterthought',
+  ]}
+/>
+
+Claude Code is a very capable assistant. It is not a replacement for engineering judgment. Every
+section in this guide assumes you're the one steering.
+
+## What's inside
+
+<CardGrid stagger>
+	<LinkCard title="Getting Started" icon="rocket" href="/getting-started/installation-and-first-session/">
+		Install it, start your first session, understand the three config tiers, and get the
+		keyboard shortcuts under your fingers.
+	</LinkCard>
+	<LinkCard title="Core Workflow" icon="pencil" href="/core-workflow/sessions-context-and-memory/">
+		Context, memory, `CLAUDE.md`, and the prompt-engineering habits that separate a good
+		session from a frustrating one.
+	</LinkCard>
+	<LinkCard title="Extending Claude" icon="puzzle" href="/extending-claude/mcp-and-built-in-tools/">
+		MCP, subagents, Agent Skills, custom commands, hooks, and plugins — how to teach Claude
+		Code about your project specifically.
+	</LinkCard>
+	<LinkCard title="Automation & Feedback Loops" icon="clock" href="/automation-and-feedback-loops/tests-and-browser-feedback/">
+		Tests, browser-driven verification, and the "Ralph loop" — running Claude Code toward a
+		goal instead of babysitting every step.
+	</LinkCard>
+	<LinkCard title="Beyond the Terminal" icon="laptop" href="/beyond-the-terminal/desktop-app/">
+		The Desktop app, mobile dispatch, Remote Control, cloud sessions, and scheduling recurring
+		tasks.
+	</LinkCard>
+	<LinkCard title="Team Playbook" icon="add-document" href="/team-playbook/claude-code-for-flutter-teams/">
+		The part the course didn't cover: Claude Code for Flutter teams, handling client data
+		safely, a shared `CLAUDE.md` template, and an onboarding checklist for new teammates.
+	</LinkCard>
+</CardGrid>
+
+## Who wrote this
+
+[Abdallah Gaber](https://abdallahgaber.dev) — Flutter team lead at LinkDev. Corrections and
+suggestions are welcome; this guide will keep evolving as Claude Code does.
+
+Thanks to [Ismail Elmogy](https://www.linkedin.com/in/ismail-elmogy/) for the course material
+that started it all.

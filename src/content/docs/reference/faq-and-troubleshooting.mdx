@@ -1,0 +1,44 @@
+---
+title: FAQ & Troubleshooting
+description: Answers to the questions that come up most once a team actually starts using Claude Code.
+---
+
+### "Claude keeps forgetting something I told it earlier in the session."
+
+Likely the context window filled up and got compacted, or you've been running a long session that should've been split into smaller ones. See [Sessions, Context & Memory](/core-workflow/sessions-context-and-memory/) — start a fresh session per feature, and put anything that must *always* be true into CLAUDE.md rather than relying on it staying in a long conversation's working memory.
+
+### "A skill I wrote isn't triggering when I expect it to."
+
+The `description` field in its `SKILL.md` is the only signal Claude uses to decide relevance — sharpen it with an explicit trigger phrase describing when to use it. See [Skills & Custom Commands](/extending-claude/skills-and-commands/).
+
+### "I keep getting interrupted by permission prompts."
+
+That's the system working as intended, not a bug — see [Security & Client Data](/team-playbook/security-and-client-data/) before reaching for `--dangerously-skip-permissions` as the fix. If prompts are genuinely just noisy for a specific safe tool, scope `--allowedTools` / `allowed-tools` more precisely instead of skipping all permission checks.
+
+### "Claude keeps writing code that doesn't match our project's conventions."
+
+This usually means CLAUDE.md doesn't actually state the convention explicitly, or states it too vaguely. See the shared CLAUDE.md template at [Shared Conventions & CLAUDE.md](/team-playbook/shared-conventions-and-claude-md/).
+
+### "Which model should I even be using?"
+
+See [Model & Cost Guidance](/team-playbook/model-and-cost-guidance/) — short version: mid-tier for most day-to-day work, top-tier for genuinely hard or high-stakes tasks.
+
+### "Is it safe to point Claude Code at a client's repo?"
+
+Read [Security & Client Data](/team-playbook/security-and-client-data/) in full before doing this on anything client-facing — short version: yes, with the same care you'd apply to any external tool touching client code.
+
+### "A session feels stuck or unresponsive."
+
+Ctrl+C cancels the current action without killing the session. If Claude seems to be looping or the plan has clearly gone sideways, it's usually faster to `/clear` or `/rewind` and re-prompt with a tighter instruction than to keep waiting it out.
+
+### "Claude used a lot of tokens for something that felt simple."
+
+Long-running sessions, large files pulled into context, and verbose tool output all add up. Check `/context` to see what's actually filling the window, and see [Model & Cost Guidance](/team-playbook/model-and-cost-guidance/) for ways to keep cost in check.
+
+### "Do I need an MCP server for everything?"
+
+No — Claude Code's built-in tools (file read/write, Bash, web search) cover most day-to-day work. Reach for MCP when you need Claude talking to something external it doesn't already have a tool for. See [MCP & Built-in Tools](/extending-claude/mcp-and-built-in-tools/).
+
+---
+
+If something in this guide looks out of date, that's expected — Claude Code moves fast, and this guide notes wherever a claim is likely to age. Check the official docs when something here seems off.

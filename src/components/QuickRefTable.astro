@@ -1,0 +1,41 @@
+---
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+---
+
+<div class="quick-ref">
+  {caption && <p class="quick-ref-caption">{caption}</p>}
+  <div class="quick-ref-scroll">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .quick-ref {
+    margin: 1.5rem 0;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .quick-ref-caption {
+    margin: 0;
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+    font-size: var(--sl-text-sm);
+    background: var(--sl-color-bg-nav);
+    border-bottom: 1px solid var(--sl-color-hairline);
+  }
+
+  .quick-ref-scroll {
+    overflow-x: auto;
+    padding: 0 1rem;
+  }
+
+  .quick-ref-scroll :global(table) {
+    margin: 0.75rem 0;
+  }
+</style>

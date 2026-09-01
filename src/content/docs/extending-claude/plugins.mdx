@@ -1,0 +1,26 @@
+---
+title: Plugins
+description: Install a packaged bundle of commands, skills, subagents, hooks, and MCP servers as a single unit.
+---
+
+import Recap from '~/components/Recap.astro';
+
+A **plugin** bundles up commands, skills, subagents, hooks, and MCP servers into a single installable unit, instead of you assembling each piece by hand.
+
+Add the official marketplace, then browse and install from it:
+
+```
+add anthropics/claude-plugins-official
+```
+
+From there you can install whatever plugins the marketplace offers — or build and share your own, packaged the same way.
+
+:::tip[Check the marketplace before hand-rolling]
+This is a good default first move when setting up a new team member, or when you're about to build a custom skill or command for something fairly common. Before writing it yourself, check whether an official or community plugin already covers it — it might save you the whole exercise.
+:::
+
+See [Onboarding Checklist](/team-playbook/onboarding-checklist/) for where this fits into getting a new teammate set up.
+
+<Recap question="What's the difference between installing a plugin and writing your own skill from scratch?">
+Installing a plugin gets you a pre-built, already-tested bundle — commands, skills, subagents, hooks, and/or MCP servers — maintained by someone else, in one step. Writing your own skill from scratch means you own the whole thing: the instructions, keeping it up to date, and making sure it actually triggers correctly. Reach for a plugin first when one already covers your need; write your own when nothing does or you need something genuinely project-specific.
+</Recap>

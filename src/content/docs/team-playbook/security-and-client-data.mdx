@@ -1,0 +1,56 @@
+---
+title: Security and Client Data
+description: What actually goes into a Claude Code session's context, and the habits that keep client data out of the wrong place.
+---
+
+import Recap from '~/components/Recap.astro';
+
+This is the most important page in this guide. Everything else here is about working faster and better — this page is about not causing a real problem while you do.
+
+## The stakes, plainly
+
+Some of the codebases this team works in are for government clients — a ministry's mobile app, a ministry's portal, a platform built for a government IT program. These aren't side projects. They come with real client data, real credentials, and in some cases real legal obligations about who gets to see what.
+
+A Claude Code session's context — the file contents it reads, the text you paste, the screenshots you attach — is exactly as sensitive as anything you'd send to any other external tool or service. If you wouldn't paste a client's `.env` file into a random SaaS chatbot, don't paste it into Claude Code either, and don't assume it's somehow different because it's a coding tool and not a chat product. Same data, same exposure, same rules.
+
+This isn't about distrusting Claude Code specifically. It's the same discipline you'd want around *any* external tool touching client work — the tool being genuinely useful is exactly why it's worth being deliberate about what you feed it.
+
+## Permission-mode discipline
+
+:::tip[Don't make bypass mode your default]
+`--dangerously-skip-permissions` on the CLI, and "Allow bypass permissions mode" in the Desktop app, both exist for narrow situations — not as a convenience setting you flip on because approval prompts are annoying. Reviewing what Claude is about to touch, especially on a client repo, *is* the safety mechanism. Turning it off because it slows you down defeats the entire point of having it.
+:::
+
+It's tempting to skip permissions the fifth time you're asked to approve a `Read` on a file you already know is fine. Resist that on client work specifically — the cost of one unreviewed action landing wrong on a client's production config, credentials file, or deployment script is a lot higher than the few seconds a permission prompt costs you. See [Commands and Shortcuts](/getting-started/commands-and-shortcuts/) for the flag itself, and [Desktop App](/beyond-the-terminal/desktop-app/) for the equivalent Desktop toggle.
+
+## Review diffs like they came from a junior teammate
+
+An AI-generated diff gets the same treatment as a human-written PR: you read it before you accept it. "It compiles" and "it passed CI" are necessary, not sufficient — plenty of code that compiles and passes existing tests still does the wrong thing, handles an edge case badly, or quietly changes behavior nobody asked for. On client work, that gap between "looks fine" and "is actually fine" is exactly where problems hide, because there's no second pair of eyes unless you're the second pair of eyes.
+
+Don't accept a change because it's convenient to accept. Read it the way you'd read a PR from someone whose judgment you're still calibrating.
+
+## Never paste secrets or client credentials into a prompt
+
+API keys, `.env` contents, client-provided credentials, auth tokens, database connection strings — none of it belongs in a Claude Code prompt, a screenshot, or a pasted error log. It's not just about Claude misusing it; it's that anything in a session's context can end up in a transcript, a log, or a shared conversation, and secrets don't get less sensitive because they passed through an AI tool on the way somewhere.
+
+The practical fix is to make this structurally hard to do by accident: deny Claude Code read/write access to `.env` files and other credential stores at the permission-config level, so the content simply never enters the model's context in the first place. See [Configuration](/getting-started/configuration/) for how to set that up — it's a five-minute change that removes an entire category of "oops, I pasted that" mistakes.
+
+## Sandbox scope for client work
+
+Be deliberate about what MCP servers, subagents, and skills have access to when you're working in a client repo. A broadly-scoped tool — one that can hit the network, read arbitrary files outside the project, or run shell commands unrestricted — is a bigger risk sitting on a client's codebase than it is on your own side project, because the blast radius of it going wrong includes someone else's data and someone else's production systems.
+
+This doesn't mean locking everything down to the point of uselessness. It means asking, before you wire up a new MCP server or a permissive subagent on a client repo: does this actually need this much access to do its job, or is this the default scope because narrowing it took extra effort?
+
+## Before you paste that into Claude
+
+A quick gut-check, worth running on anything you're about to paste, screenshot, or attach:
+
+- Would you be comfortable pasting this into a public forum post?
+- Is this actually necessary context for the task, or is it context you grabbed reflexively because it was on screen?
+- Does this file or screenshot contain a real client credential, API token, or personal data — even incidentally, in the corner of a screenshot or a log line you didn't read closely?
+
+If the answer to any of those gives you pause, trim it before it goes in, not after.
+
+<Recap question="Why is 'it compiles and passes CI' not sufficient review for AI-generated code on a client project?">
+Compiling and passing existing tests only proves the code doesn't break what was already being checked — it says nothing about whether the change does the right thing, handles edge cases correctly, or introduces a subtle behavior change nobody asked for. On a client project there's often no second reviewer unless you act as one, so treating "it builds" as "it's done" skips the actual review step and leaves exactly the kind of mistake — silent, plausible-looking, technically passing — that's hardest to catch after the fact.
+</Recap>

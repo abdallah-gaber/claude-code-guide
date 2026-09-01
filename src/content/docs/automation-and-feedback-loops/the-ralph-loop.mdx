@@ -1,0 +1,34 @@
+---
+title: The Ralph Loop
+description: A community technique for repeatedly re-running Claude Code toward the same goal — what it is, and why to use it deliberately.
+---
+
+import Recap from '~/components/Recap.astro';
+
+:::note[A community technique, not a built-in feature]
+The "Ralph Loop" is a pattern coined by the developer community, not an official Anthropic product feature. There's no `--ralph` flag, no setting to toggle, nothing to install. It's a way of *using* Claude Code — a technique you can adopt with plain prompting and a shell loop — not a thing Claude Code ships with.
+:::
+
+## What it is
+
+The core idea: instead of steering every single step yourself, you repeatedly re-run Claude Code against the same goal and let it iterate toward convergence on its own. Each run picks up where the last one left off (or starts fresh with the same brief), tries something, and you run it again. Over enough iterations, it tends to converge on something workable.
+
+It's the opposite of the tight, turn-by-turn steering this guide otherwise assumes. You're trading your own attention for raw iteration — let the loop run, come back later, see what it produced.
+
+## The honest tradeoffs
+
+- **It can produce genuinely good results** — especially for prototyping and exploration, where you don't yet know the right shape of the solution and want to see several attempts converge on one.
+- **It can burn a lot of tokens.** You're trading control for time, and re-running toward the same goal repeatedly isn't free — every iteration is a full session's worth of tokens, not a cheap retry.
+- **Quality varies run to run.** Sometimes it converges quickly on something solid; sometimes it gets stuck in a rut, repeating the same wrong approach iteration after iteration with no one there to redirect it.
+
+:::caution[Not free autopilot]
+This trades away exactly the thing this whole guide is built around: you steering the AI, deliberately, one step at a time. That's a real cost, not just a style choice — see [the core mindset](/) this guide opens with.
+
+Use the Ralph Loop deliberately, for exploration and prototyping, not as a default way of working. And always review what comes out the other end before it goes anywhere near production or client code — nothing about unattended iteration makes the output trustworthy by default. See [Security and Client Data](/team-playbook/security-and-client-data/) for what's at stake when unreviewed code touches a client project.
+:::
+
+<Recap question="Why is the Ralph Loop a bigger risk for client/production code than for prototyping?">
+Prototyping is exploratory by nature — you're trying to find a workable shape for a solution, and you were always going to throw away most attempts and review whatever you kept. The loop's variance (sometimes great, sometimes stuck in a rut) fits that setting fine.
+
+Client and production code carries real consequences for correctness, security, and stability, and the loop runs unattended for many iterations without anyone steering it. Unreviewed output can land in that code exactly because no one was watching it converge — which is why it always needs a real review pass before it goes anywhere near a client project.
+</Recap>

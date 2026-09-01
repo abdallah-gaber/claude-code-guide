@@ -1,0 +1,40 @@
+---
+title: Onboarding Checklist
+description: A first-week checklist for getting set up with Claude Code at LinkDev.
+---
+
+import { CardGrid } from '@astrojs/starlight/components';
+import LinkCard from '~/components/LinkCard.astro';
+import Checklist from '~/components/Checklist.astro';
+
+New to Claude Code on this team? Here's a first week's worth of setup, reading, and one real task — work through it at whatever pace makes sense. Your progress is saved in your browser as you check items off, so you can close this page and pick up where you left off later.
+
+<Checklist
+  storageKey="onboarding"
+  items={[
+    "Install Claude Code and confirm `claude --help` works",
+    "Run `/init` in a real project repo and review the generated CLAUDE.md",
+    "Read the Getting Started section of this guide",
+    "Read the security & client data page and actually apply the .env permission denial",
+    "Set your default model tier and understand when it's worth escalating",
+    "Try Plan Mode on one real, non-trivial task before touching any code",
+    "Look at (or add to) a subagent or skill already used on your project",
+    "Get the shared CLAUDE.md template applied to a project you're working on",
+    "Do one full task end-to-end with a teammate reviewing the diff before merge",
+    "Join the internal channel where the team shares Claude Code tips and wins",
+  ]}
+/>
+
+## Start here
+
+<CardGrid>
+	<LinkCard title="Installation & First Session" icon="rocket" href="/getting-started/installation-and-first-session/">
+		Get Claude Code installed and run through your actual first session.
+	</LinkCard>
+	<LinkCard title="Security & Client Data" icon="padlock" href="/team-playbook/security-and-client-data/">
+		Read this before you run Claude Code against a client repo — not after.
+	</LinkCard>
+	<LinkCard title="Plan Mode" icon="pencil" href="/core-workflow/plan-mode/">
+		Have Claude think through an approach before it touches any code.
+	</LinkCard>
+</CardGrid>

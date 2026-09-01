@@ -1,0 +1,54 @@
+---
+title: Tests and Browser Feedback
+description: How to give Claude Code a feedback loop so it can check its own work instead of just guessing it's correct.
+---
+
+import CompareCard from '~/components/CompareCard.astro';
+import Recap from '~/components/Recap.astro';
+
+Claude Code writes better code when it can check its own work. Left alone, it produces a plausible-looking change and hands it back to you — and "plausible-looking" and "correct" are not the same thing. Give it a way to verify what it just did, and it can catch its own mistakes before you ever see them.
+
+There are two main ways to give Claude that feedback loop: let it drive a real, running app and observe the result, or let it run automated tests and read the pass/fail signal. Both work. They trade off differently.
+
+## Browser access vs. automated tests
+
+<CompareCard
+  leftTitle="Browser access (e.g. Playwright)"
+  leftTone="neutral"
+  leftPoints={[
+    'Claude can drive an actual running app — click, type, navigate — and see the real result',
+    'Catches things static analysis and unit tests structurally cannot: layout glitches, broken navigation, a button that\'s there but does nothing',
+    'Token-heavy — screenshots and DOM snapshots eat a lot of context per check',
+    'Slower per iteration, since it involves an actual running app and real waits',
+  ]}
+  rightTitle="Automated tests"
+  rightTone="neutral"
+  rightPoints={[
+    'Cheap and fast — a clear pass/fail signal Claude can iterate against quickly',
+    'Deterministic, so Claude can loop on it many times in a session without burning much budget',
+    'Only as good as your test coverage — it can\'t catch what you didn\'t think to test for',
+    'Says nothing about whether the thing actually looks or feels right to a user',
+  ]}
+/>
+
+Neither one is "the right answer." A test suite that passes tells you the logic you thought to check is sound; it says nothing about whether the screen actually renders correctly. Browser access shows you the real thing, but you're paying context tokens for every screenshot and every DOM read along the way.
+
+:::tip[For a Flutter team: default to widget and golden tests]
+Widget tests and golden tests are your cheap, fast feedback loop — they run in seconds, cost almost nothing in tokens, and Claude can iterate against them many times in a row without you noticing the cost. Make that the default loop you point Claude at.
+
+Reach for browser-driven verification — or its Flutter equivalent, driving a simulator — only when you specifically need to confirm real visual or interactive behavior: a layout that needs eyeballing, an animation, a flow across multiple screens. That's a deliberate, occasional check, not the loop you run on every change.
+
+More on this tradeoff in the context of a Flutter team specifically: [Claude Code for Flutter Teams](/team-playbook/claude-code-for-flutter-teams/).
+:::
+
+## Why this matters more than it sounds like
+
+A feedback loop changes what "asking Claude to fix a bug" actually looks like. Without one, you get a single guess, and you're the one who finds out later whether it worked. With one, Claude can try something, check it, see that it didn't work, and try again — inside the same turn, before it ever hands control back to you.
+
+That's the real value of both techniques above: not "producing code," but producing code *and knowing whether it's right* before you have to tell it otherwise.
+
+<Recap question="Why might you prefer automated tests as Claude's feedback loop over letting it drive the app directly, even though browser access is more thorough?">
+Automated tests are cheap and fast — they give Claude a clear pass/fail signal it can iterate against many times in a session without burning much context. Browser access is genuinely more thorough (it shows the real running app, catching things tests can't), but every screenshot and DOM read costs a meaningful chunk of tokens, so it's slower and more expensive per check.
+
+For a Flutter team, that usually means: widget and golden tests as the everyday loop, and simulator/browser-driven checks reserved for when you specifically need to confirm real visual or interactive behavior.
+</Recap>

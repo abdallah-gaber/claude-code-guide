@@ -1,0 +1,41 @@
+---
+title: Hooks
+description: Run your own command automatically in response to a specific Claude Code event, like auto-formatting after every edit.
+---
+
+import Recap from '~/components/Recap.astro';
+
+A **hook** is your own command that runs automatically when a specific Claude Code event fires — no need to ask for it each time. The classic example: auto-formatting code the moment Claude edits a file, rather than remembering to say "now run the formatter" at the end of every session.
+
+## A worked example
+
+Here's a `PostToolUse` hook that runs after any `Edit` or `Write` tool call, in `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": "bun run format" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Swap `bun run format` for whatever your project actually uses — for a Flutter/Dart repo that's likely `dart format .`.
+
+Once this is in place, every time Claude edits or writes a file, your formatter runs immediately afterward, automatically. You never have to remember to ask.
+
+:::note[More events exist beyond PostToolUse]
+The set of supported hook events can grow over time. `PostToolUse` (after a tool runs) is the one shown here, but check the current hooks reference docs for the full list — there are hooks for other points in the session lifecycle too.
+:::
+
+Hooks live in the same tiered settings system as everything else in `.claude/settings.json` — see [Configuration](/getting-started/configuration/) for how project, user, and local settings stack. For a Dart-specific hook idea (running `dart format` or `flutter analyze` automatically post-edit), see [Claude Code for Flutter Teams](/team-playbook/claude-code-for-flutter-teams/).
+
+<Recap question="What's a hook actually for, versus just asking Claude to run the formatter each time?">
+A hook guarantees the action happens every single time the triggering event occurs — it's enforced by Claude Code itself, not dependent on you remembering to ask or Claude remembering to do it unprompted. Asking each time is optional and easy to forget; a hook makes the behavior automatic and consistent across the whole team, since it's checked into `.claude/settings.json` rather than living in anyone's habits.
+</Recap>
