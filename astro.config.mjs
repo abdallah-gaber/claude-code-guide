@@ -13,6 +13,9 @@ export default defineConfig({
         'A fun, practical, no-nonsense guide to Claude Code — built by a Flutter team lead at LinkDev for his team, and shared as a free resource for anyone finding it useful.',
       social: [{ icon: 'external', label: 'abdallahgaber.dev', href: 'https://abdallahgaber.dev' }],
       customCss: ['./src/styles/custom.css'],
+      components: {
+        PageFrame: './src/components/overrides/PageFrame.astro',
+      },
       sidebar: [
         {
           label: 'Getting Started',

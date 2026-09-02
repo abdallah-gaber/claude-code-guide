@@ -3,10 +3,10 @@ title: Claude Code, Practically
 description: A fun, practical guide to Claude Code — built by a Flutter team lead at LinkDev for his team, and shared as a free resource for anyone finding it useful.
 template: splash
 hero:
-  tagline: The steering wheel, not the autopilot. A practical guide to using Claude Code well — written for a real mobile team, shared with anyone who wants it.
+  tagline: The steering wheel, not the autopilot. Pick a 30-minute path below and actually get somewhere with Claude Code today.
   actions:
-    - text: Start with Getting Started
-      link: /getting-started/installation-and-first-session/
+    - text: Find My Tour
+      link: '#pick-a-tour'
       icon: right-arrow
       variant: primary
     - text: Jump to the Cheat Sheet
@@ -18,18 +18,37 @@ hero:
 import { CardGrid } from '@astrojs/starlight/components';
 import CompareCard from '~/components/CompareCard.astro';
 import LinkCard from '~/components/LinkCard.astro';
+import TourPicker from '~/components/TourPicker.astro';
+import TerminalDemo from '~/components/TerminalDemo.tsx';
+import ScrollReveal from '~/components/ScrollReveal.astro';
 
-## Why this guide exists
+<ScrollReveal />
 
-I lead a Flutter team at [LinkDev](https://abdallahgaber.dev). This guide's first seed came from
-a Claude Code course that my teammate [Ismail Elmogy](https://www.linkedin.com/in/ismail-elmogy/)
-took and generously shared with the rest of us — the notes were good, but scattered across slide
-decks and written for a general audience rather than for a team shipping real client apps under
-real deadlines. This guide is what came out of turning that material into something we actually
-use day to day: fewer slides, more "here's exactly what to type and why."
+<div id="pick-a-tour" />
 
-It's public and free. If you're not on my team and you find it useful anyway — welcome, that's
-the point. Consider it a small giving-back project from LinkDev to the wider dev community.
+<TourPicker />
+
+<div data-reveal>
+
+## Watch it actually work
+
+Not sure this is worth your 30 minutes? Here's a real shape of what a session looks like —
+press play.
+
+<TerminalDemo client:load title="claude" lines={[
+  { type: 'input', text: 'claude "why is the checkout button unresponsive on iOS Safari?"' },
+  { type: 'output', text: 'Reading lib/screens/checkout_page.dart...' },
+  { type: 'output', text: "Found it — a parent widget's onTap is swallowing the button's own GestureDetector." },
+  { type: 'comment', text: 'It explains the bug, not just the fix' },
+  { type: 'output', text: 'Wrapping the parent in HitTestBehavior.opaque and re-running the widget tests...' },
+  { type: 'output', text: 'Fixed. 12/12 widget tests still passing.' },
+  { type: 'input', text: '/compact' },
+  { type: 'output', text: 'Context compacted — ready for the next one.' },
+]} />
+
+</div>
+
+<div data-reveal>
 
 ## The one idea that matters most
 
@@ -55,7 +74,13 @@ Everything else in this guide is detail. This is the thesis:
 Claude Code is a very capable assistant. It is not a replacement for engineering judgment. Every
 section in this guide assumes you're the one steering.
 
-## What's inside
+</div>
+
+<div data-reveal>
+
+## Prefer to browse instead?
+
+No quiz, no tour — just the whole map.
 
 <CardGrid stagger>
 	<LinkCard title="Getting Started" icon="rocket" href="/getting-started/installation-and-first-session/">
@@ -84,10 +109,28 @@ section in this guide assumes you're the one steering.
 	</LinkCard>
 </CardGrid>
 
-## Who wrote this
+</div>
+
+<div data-reveal>
+
+## Why this guide exists
+
+I lead a Flutter team at [LinkDev](https://abdallahgaber.dev). This guide's first seed came from
+a Claude Code course that my teammate [Ismail Elmogy](https://www.linkedin.com/in/ismail-elmogy/)
+took and generously shared with the rest of us — the notes were good, but scattered across slide
+decks and written for a general audience rather than for a team shipping real client apps under
+real deadlines. This guide is what came out of turning that material into something we actually
+use day to day: fewer slides, more "here's exactly what to type and why."
+
+It's public and free. If you're not on my team and you find it useful anyway — welcome, that's
+the point. Consider it a small giving-back project from LinkDev to the wider dev community.
+
+### Who wrote this
 
 [Abdallah Gaber](https://abdallahgaber.dev) — Flutter team lead at LinkDev. Corrections and
 suggestions are welcome; this guide will keep evolving as Claude Code does.
 
 Thanks to [Ismail Elmogy](https://www.linkedin.com/in/ismail-elmogy/) for the course material
 that started it all.
+
+</div>
