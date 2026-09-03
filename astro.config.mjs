@@ -13,6 +13,31 @@ export default defineConfig({
         'A fun, practical, no-nonsense guide to Claude Code — built by a Flutter team lead at LinkDev for his team, and shared as a free resource for anyone finding it useful.',
       social: [{ icon: 'external', label: 'abdallahgaber.dev', href: 'https://abdallahgaber.dev' }],
       customCss: ['./src/styles/custom.css'],
+      editLink: {
+        baseUrl: 'https://github.com/abdallah-gaber/claude-code-guide/edit/main/',
+      },
+      head: [
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image', content: 'https://claudecodeguide.abdallahgaber.dev/og.png' },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image:width', content: '1200' },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image:height', content: '630' },
+        },
+        {
+          tag: 'meta',
+          attrs: { name: 'twitter:card', content: 'summary_large_image' },
+        },
+        {
+          tag: 'meta',
+          attrs: { name: 'twitter:image', content: 'https://claudecodeguide.abdallahgaber.dev/og.png' },
+        },
+      ],
       components: {
         PageFrame: './src/components/overrides/PageFrame.astro',
       },
