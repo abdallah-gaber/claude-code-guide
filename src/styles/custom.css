@@ -68,3 +68,9 @@
     transition: none;
   }
 }
+
+/* Clean truncation for the header site title on narrow screens — Starlight's default just
+   hard-clips (no ellipsis) when there isn't room for the full title. */
+.site-title span {
+  text-overflow: ellipsis;
+}
