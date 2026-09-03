@@ -8,11 +8,14 @@ export default defineConfig({
   site: 'https://claudecodeguide.abdallahgaber.dev',
   integrations: [
     starlight({
-      title: 'Claude Code: The Practical Guide',
+      title: 'Claude Code Guide',
       description:
         'A fun, practical, no-nonsense guide to Claude Code — built by a Flutter team lead at LinkDev for his team, and shared as a free resource for anyone finding it useful.',
-      social: [{ icon: 'external', label: 'abdallahgaber.dev', href: 'https://abdallahgaber.dev' }],
+      social: [
+        { icon: 'laptop', label: "Abdallah Gaber's portfolio", href: 'https://abdallahgaber.dev' },
+      ],
       customCss: ['./src/styles/custom.css'],
+      lastUpdated: true,
       editLink: {
         baseUrl: 'https://github.com/abdallah-gaber/claude-code-guide/edit/main/',
       },
@@ -40,6 +43,8 @@ export default defineConfig({
       ],
       components: {
         PageFrame: './src/components/overrides/PageFrame.astro',
+        Header: './src/components/overrides/Header.astro',
+        SocialIcons: './src/components/overrides/SocialIcons.astro',
       },
       sidebar: [
         {
