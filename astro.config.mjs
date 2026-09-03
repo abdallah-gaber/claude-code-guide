@@ -40,6 +40,14 @@ export default defineConfig({
           tag: 'meta',
           attrs: { name: 'twitter:image', content: 'https://claudecodeguide.abdallahgaber.dev/og.png' },
         },
+        {
+          // Vercel Web Analytics — framework-agnostic script tag. Vercel serves this path
+          // automatically on any project with Web Analytics enabled in its dashboard; it
+          // only responds on the actual Vercel deployment (404s locally/in preview builds,
+          // harmlessly since the tag is deferred).
+          tag: 'script',
+          attrs: { src: '/_vercel/insights/script.js', defer: true },
+        },
       ],
       components: {
         PageFrame: './src/components/overrides/PageFrame.astro',
